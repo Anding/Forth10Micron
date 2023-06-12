@@ -1,8 +1,8 @@
 \ Testing code with the 10Micron mount
 
-include e:/coding/ptolemy/ip.f
-include e:/coding/ptolemy/10Micron.f
-include e:/coding/ptolemy/celestial.f
+include ../ForthBase/ip.f
+include 10Micron.f
+include 10Micron_celestial.f
 
 10u.connect
 
