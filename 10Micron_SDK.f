@@ -1,10 +1,38 @@
 \ Code for controlling the 10Micron mount
+include %idir%\..\ForthBase\libraries\libraries.f
+NEED network
 
-0 value MNTSOC
+0 value 10Micron.socket
 \ value type holding the socket number of the 10Micron mount
 
-256 buffer: MNTBUF
+192 168 1 107 toIPv4 value 10Micron.IP
+\ change for the local rig
+
+256 buffer: 10Micron.buffer
 \ buffer to hold strings communicated with the 10Micron mount
+
+: 10u.connect ( -- )
+\ try to connect to the 10 Micron mount
+	CR
+	10Micron.IP 0 3490 TCPConnect
+	?dup 0 = if 
+		." Connection succeeded on socket "
+		dup -> 10Micron.socket
+	else
+		." Connection failed with WinSock error number "
+	then
+	dup . CR
+	drop \ better to leave the result?
+;
+
+: 10u.checksocket ( -- ior)
+\ check for an uninitialized socket
+	MNTSOC 0 = if 
+		CR ." Use mount.connect first" CR -1 
+	else
+		0
+	then
+;
 
 : compose-command {: caddr1 u1 caddr2 u2 -- MNTBUF u3 :}	\ use VFX locals
 \ compose a mount command in the format PrefixData#
@@ -21,28 +49,7 @@
 	MNTBUF	u1 u2 + 1+			( caddr3 u3)
 ;
 
-: 10u.connect ( -- )
-\ try to connect to the 10 Micron mount at Deep Sky Chile
-	CR
-	192 168 1 107 toIPv4 0 3490 TCPConnect
-	?dup 0 = if 
-		." Connection succeeded on socket "
-		dup -> MNTSOC
-	else
-		." Connection failed with WinSock error number "
-	then
-	dup . CR
-	drop \ better to leave the result?
-;
 
-: 10u.checksocket ( -- ior)
-\ check for an uninitialized socket
-	MNTSOC 0 = if 
-		CR ." Use mount.connect first" CR -1 
-	else
-		0
-	then
-;
 	
 : 10u.tell ( c-addr u --)
 \ pass a command string to the mount	
