@@ -6,7 +6,7 @@
 	DOES>	( -- caddr u)
 		count				\ copy the counted string at the PFA to the stack in caddr u format
 		CR 10u.tell 
-		10u.ask 2dup type
+		10u.ask type CR
 ;
 
 : compose-command {: caddr1 u1 caddr2 u2 -- MNTBUF u3 :}	\ use VFX locals
@@ -15,13 +15,13 @@
 \ caddr2 u2 contains the data, which will be appended to caddr1 u1
 \ # is appended by the word
 \ u3 = u1 + u2 + 1
-	caddr1 MNTBUF u1			( from to len) 
+	caddr1 10Micron.buffer u1			( from to len) 
 	cmove
-	caddr2 MNTBUF u1 + u2	( from to len)
+	caddr2 10Micron.buffer u1 + u2	( from to len)
 	cmove
-	'#' MNTBUF u1 + u2 +		( '#' caddr)
+	'#' 10Micron.buffer u1 + u2 +		( '#' caddr)
 	c!
-	MNTBUF	u1 u2 + 1+			( caddr3 u3)
+	10Micron.buffer	u1 u2 + 1+			( caddr3 u3)
 ;
 
 : MAKE-DATA-COMMAND
@@ -32,7 +32,7 @@
 	DOES>	( caddr u -- caddr u)
 		count				\ copy the counted string at the PFA to the stack in caddr u format
 		CR 2swap compose-command 10u.tell 
-		10u.ask 2dup type
+		10u.ask type CR
 ;
 
 : MAKE-QUIET-COMMAND

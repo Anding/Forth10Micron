@@ -1,11 +1,12 @@
 \ Code for controlling the 10Micron mount
 include %idir%\..\ForthBase\libraries\libraries.f
+NEED forthbase
 NEED network
 
 0 value 10Micron.socket
 \ value type holding the socket number of the 10Micron mount
 
-192 168 1 107 toIPv4 value 10Micron.IP
+192 168 0 15 toIPv4 value 10Micron.IP
 \ change for the local rig
 
 256 buffer: 10Micron.buffer

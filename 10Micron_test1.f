@@ -1,36 +1,48 @@
 \ Testing code with the 10Micron mount
 
-include ../ForthBase/ip.f
-include 10Micron.f
-include 10Micron_celestial.f
+\ Code for controlling the 10Micron mount
+include %idir%\..\ForthBase\libraries\libraries.f
+NEED Forth10Micron
 
 10u.connect
+10u.checksocket drop
 
 CR ." Ask status"
-10u.status? 2drop
-
+10u.Status
 CR ." Set high precision mode"
-10u.highPrecision
+10u.HighPrecisionOn
 
-CR ." Set target right ascension "
-12 45 15 $RA
-2dup type
-10u.RA 2drop
-
-CR ." Set target declination "
--80 30 10 $DEC
-2dup type
-10u.DEC 2drop
-
-CR ." Ask telescope right ascension"
-10u.RA? 2drop
-
-CR ." Ask telescope declination"
-10u.DEC? 2drop
-
-CR ." Ask status"
-10u.status? 2drop
-
-	
-		
+.( 10u.TrackingMode ) 10u.TrackingMode
+.( 10u.GPSclockMode ) 10u.GPSclockMode
+.( 10u.AlignmentStarCount ) 10u.AlignmentStarCount		
+.( 10u.ModelAlignmentInfo ) 10u.ModelAlignmentInfo
+.( 10u.MountAlt ) 10u.MountAlt
+.( 10u.TargetAlt ) 10u.TargetAlt
+.( 10u.MountAz ) 10u.MountAz
+.( 10u.TargetAz ) 10u.TargetAz
+.( 10u.MountRA ) 10u.MountRA
+.( 10u.TargetRA ) 10u.TargetRA
+.( 10u.MountDec ) 10u.MountDec
+.( 10u.TargetDec ) 10u.TargetDec
+.( 10u.SiteElevation ) 10u.SiteElevation
+.( 10u.SiteLongitude ) 10u.SiteLongitude
+.( 10u.SiteLatitude ) 10u.SiteLatitude
+.( 10u.TimeToTrackingEnd ) 10u.TimeToTrackingEnd
+.( 10u.LocalDate ) 10u.LocalDate
+.( 10u.LocalTime ) 10u.LocalTime
+.( 10u.LocalDateTime ) 10u.LocalDateTime 
+.( 10u.UTCDateTime ) 10u.UTCDateTime
+.( 10u.SiderealTime ) 10u.SiderealTime
+.( 10u.Status ) 10u.Status
+.( 10u.MountModel ) 10u.MountModel
+.( 10u.IPaddress ) 10u.IPaddress
+.( 10u.MACaddress ) 10u.MACaddress
+.( 10u.FirmwareVersion ) 10u.FirmwareVersion
+.( 10u.SerialNumber ) 10u.SerialNumber
+.( 10u.RefractionCorrectionMode ) 10u.RefractionCorrectionMode
+.( 10u.SpeedCorrectionMode ) 10u.SpeedCorrectionMode
+.( 10u.DualAxisTrackingMode ) 10u.DualAxisTrackingMode
+.( 10u.MountPierSide ) 10u.MountPierSide
+.( 10u.TargetPierSide ) 10u.TargetPierSide
+.( 10u.UnattendedFlipSetting ) 10u.UnattendedFlipSetting
 
