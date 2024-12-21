@@ -3,6 +3,9 @@ include %idir%\..\ForthBase\libraries\libraries.f
 NEED forthbase
 NEED network
 
+0 value 10Micron.verbose
+\ 10u.ask will report results to the terminal
+
 0 value 10Micron.socket
 \ value type holding the socket number of the 10Micron mount
 
@@ -69,5 +72,6 @@ NEED network
 		then
 	repeat
 	drop 10Micron.buffer R>
-	dup 0= if ." No response from the mount" CR then	
+	dup 0= if 2drop s" NO RESPONSE" then	
+	10u.verbose if 2dup type CR then (caddr u)
 ;
