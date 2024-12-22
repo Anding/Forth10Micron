@@ -45,47 +45,35 @@
 		CR 10u.tell 
 ;
 
-\ Handle and convert between various celestial data formats
+\ Prepare string formats for 10u mount commands
 
-: $DEC ( deg min sec -- caddr u)
+: ~~~DEC$ ( deg min sec -- caddr u)
 \ obtain a declination string in the format sDD*MM:SS from 3 integers
-	<# 			\ proceeds from the rightmost character in the string
-	0 # # 2drop	\ numeric output works with double numbers
-	':' HOLD
-	0 # # 2drop
-	'*' HOLD
-	dup >R 
-	abs 0 # # 
-	R> 0 < if '-' else '+' then HOLD
-	#>
+	ff1separator ff2separator ffForcePlus									\ save current
+	'*' -> ff1separator ':' -> ff2separator -1 -> ffForcePlus
+	~~~$
+	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
 ;
 
-: $RA ( hr min sec -- caddr u)
+: ~~~RA$ ( hr min sec -- caddr u)
 \ obtain a right ascension string in the format HH:MM:SS	from 3 integers
-	<#
-	0 # # 2drop
-	':' HOLD
-	0 # # 2drop
-	':' HOLD
-	0 # # 
-	#>
+	ff1separator ff2separator ffForcePlus									\ save current
+	':' -> ff1separator ':' -> ff2separator 0 -> ffForcePlus
+	~~~$
+	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
 ;
 
-: $ALT ( deg min sec -- caddr u)
+: ~~~ALT$ ( deg min sec -- caddr u)
 \ obtain an altitude string in the format sDD*MM:SS from 3 integers
-	$DEC
+	~~~DEC$ 
 ;
 
-: $AZ ( deg min sec -- caddr u)
+: ~~~AZ$ ( deg min sec -- caddr u)
 \ obtain an azimuth string in the format DDD*MM:SS from 3 integers	
-	<#
-	0 # # 2drop
-	':' HOLD
-	0 # # 2drop
-	'*' HOLD
-	dup >R 
-	0 # # #
-	#>
+	ff1separator ff2separator ffForcePlus									\ save current
+	'*' -> ff1separator ':' -> ff2separator 0 -> ffForcePlus
+	~~~$
+	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
 ;
 
 		
