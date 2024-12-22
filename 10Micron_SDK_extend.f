@@ -47,33 +47,52 @@
 
 \ Prepare string formats for 10u mount commands
 
-: ~~~DEC$ ( deg min sec -- caddr u)
-\ obtain a declination string in the format sDD*MM:SS from 3 integers
+: ~DEC$ ( deg-min-sec -- caddr u)
+\ obtain a declination string in the format sDD*MM:SS from single integer finite fraction format
 	ff1separator ff2separator ffForcePlus									\ save current
 	'*' -> ff1separator ':' -> ff2separator -1 -> ffForcePlus
-	~~~$
+	~$
 	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
 ;
 
-: ~~~RA$ ( hr min sec -- caddr u)
-\ obtain a right ascension string in the format HH:MM:SS	from 3 integers
+: ~RA$ ( hr-min-sec -- caddr u)
+\ obtain a right ascension string in the format HH:MM:SS	from single integer finite fraction format
 	ff1separator ff2separator ffForcePlus									\ save current
 	':' -> ff1separator ':' -> ff2separator 0 -> ffForcePlus
-	~~~$
+	~$
 	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
 ;
 
-: ~~~ALT$ ( deg min sec -- caddr u)
-\ obtain an altitude string in the format sDD*MM:SS from 3 integers
-	~~~DEC$ 
+: ~ALT$ ( deg-min-sec -- caddr u)
+\ obtain an altitude string in the format sDD*MM:SS from single integer finite fraction format
+	~DEC$ 
 ;
 
-: ~~~AZ$ ( deg min sec -- caddr u)
-\ obtain an azimuth string in the format DDD*MM:SS from 3 integers	
+: ~AZ$ ( deg-min-sec -- caddr u)
+\ obtain an azimuth string in the format DDD*MM:SS from single integer finite fraction format	
 	ff1separator ff2separator ffForcePlus									\ save current
 	'*' -> ff1separator ':' -> ff2separator 0 -> ffForcePlus
-	~~~$
+	~$
 	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
+;
+
+\ Prepare string formats for FITS
+
+: ~FITS$ ( x-y-z -- caddr u)
+\ obtain an  string in the format XX YY ZZ from single integer finite fraction format	
+	ff1separator ff2separator ffForcePlus									\ save current
+	BL -> ff1separator BL -> ff2separator -1 -> ffForcePlus
+	~$
+	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
+;
+
+\ do-or-die error handler
+: 10um.?abort ( caddr u --)
+	flushKeys	
+	drop c@						\ the first character in the buffer
+	'1' == IF EXIT THEN		\ '1' is the valid return condition
+	." Mount responds invalid"
+	abort 
 ;
 
 		
