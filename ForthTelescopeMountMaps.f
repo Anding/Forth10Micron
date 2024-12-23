@@ -3,7 +3,7 @@
 : add-mountFITS ( map --)
 \ add key value pairs for FITS observation parameters
 	>R
-	s"  " 							R@ =>" #MOUNT"			\ a header to indicate the source of these FITS values
+	s"  "							R@ =>" #MOUNT"			\ a header to indicate the source of these FITS values
 	mount_equatorial 
 	swap ~FITS$						R@ =>" OBJCTRA"
 	~FITS$							R@ =>" OBJCTDEC"
@@ -19,7 +19,7 @@
 	10u.SerialNumber 1-			R@ =>" MOUNTSN"
 	10u.MountPierSide 1-			R@ =>" PIERSIDE"	
 	10u.ModelAlignmentInfo drop 18 + 7 >float fp~
-	IF	~FITS 						R@ =>" POLARERR" THEN
+	IF	~FITS$ 						R@ =>" POLARERR" THEN
 	R> drop
 ;
 

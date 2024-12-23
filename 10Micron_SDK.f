@@ -2,6 +2,7 @@
 include %idir%\..\ForthBase\libraries\libraries.f
 NEED forthbase
 NEED network
+NEED finitefractions
 
 0 value 10Micron.verbose
 \ 10u.ask will report results to the terminal
@@ -73,5 +74,5 @@ NEED network
 	repeat
 	drop 10Micron.buffer R>
 	dup 0= if 2drop s" NO RESPONSE" then	
-	10u.verbose if 2dup type CR then (caddr u)
+	10Micron.verbose if 2dup type CR then ( caddr u)
 ;

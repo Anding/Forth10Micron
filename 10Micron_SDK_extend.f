@@ -90,7 +90,7 @@
 : 10um.?abort ( caddr u --)
 	flushKeys	
 	drop c@						\ the first character in the buffer
-	'1' == IF EXIT THEN		\ '1' is the valid return condition
+	'1' = IF EXIT THEN		\ '1' is the valid return condition
 	." Mount responds invalid"
 	abort 
 ;

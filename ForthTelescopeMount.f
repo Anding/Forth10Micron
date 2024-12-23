@@ -50,7 +50,7 @@
 	~RA$ 10u.SetTargetRA 10um.?abort
 	10u.UnPark
 	10u.SlewToEquatorialTarget ( caddr u)
-	over c@ '0' == IF 2drop wait-mount EXIT THEN		\ '0' is the no-error condition
+	over c@ '0' = IF 2drop wait-mount EXIT THEN		\ '0' is the no-error condition
 	type CR abort
 ;
 	
@@ -66,7 +66,7 @@
 	~ALT$ 10u.SetTargetAlt 10um.?abort
 	10u.UnPark
 	10u.SlewToHorizonTarget ( caddr u)
-	over c@ '0' == IF 2drop wait-mount EXIT THEN		\ '0' is the no-error condition
+	over c@ '0' = IF 2drop wait-mount EXIT THEN		\ '0' is the no-error condition
 	type CR abort
 ;
 
@@ -81,10 +81,10 @@
 : mount_hourAngle ( -- HA)
 \ return the Hour Angle of the mount in the range -11 59 59 to 12 00 00
 \ negative means the mount is pointing is A.M., positive P.M.
-	10u.10u.SiderealTime >number~
+	10u.SiderealTime >number~
 	10u.MountRA >number~					( LST RA)
 	- 											( HA)
-	dup -43200 (12 hours in seconds) <= IF 43200 + THEN
+	dup -43200 ( 12 hours in seconds) <= IF 43200 + THEN
 ;
 
 : stop-mount ( --)
