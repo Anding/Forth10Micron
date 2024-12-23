@@ -21,21 +21,16 @@ NEED finitefractions
 	CR
 	10Micron.IP 0 3490 TCPConnect
 	?dup 0 = if 
-		." Connection succeeded on socket "
 		dup -> 10Micron.socket
+		." Connection succeeded on socket " .
 	else
-		." Connection failed with WinSock error number "
+		." Connection failed with WinSock error number " . abort
 	then
-	dup . CR
-	drop \ better to leave the result?
 ;
 
-: 10u.checksocket ( -- ior)
+: 10u.checksocket ( --)
 \ check for an uninitialized socket
-	10Micron.socket 0 = if 
-		CR ." Use mount.connect first" CR -1 
-	else
-		0
+	10Micron.socket 0 = if CR ." Uninitialized TCP/IP socket to the mount" abort
 	then
 ;
 	

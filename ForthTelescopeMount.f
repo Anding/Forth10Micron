@@ -1,4 +1,5 @@
 : add-mount ( --)
+	flushkeys
 	10u.connect
 	10u.HighPrecisionOn
 	10u.DualAxisTrackingOn
