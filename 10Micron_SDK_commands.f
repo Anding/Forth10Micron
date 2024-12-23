@@ -9,6 +9,17 @@ s" :gtg#" MAKE-COMMAND			10u.GPSclockMode
 \ Sync control and model building
 s" :getalst#" MAKE-COMMAND		10u.AlignmentStarCount
 s" :getain#" MAKE-COMMAND		10u.ModelAlignmentInfo
+\ "ZZZ.ZZZZ,+AA.AAAA,EE.EEEE,PPP.PP,+OO.OOOO,+aa.aa,+bb.bb,NN,RRRRR.R#"
+\ "000.3469,+22.3778,00.3310,284.32,-00.0403,+00.28,+00.04,08,00004.7#"
+\  012345678901234567890123456789012345678901234567890123456789012345
+\  0         1         2         3         4         5         6
+\ ZZZ.ZZZZ and +AA.AAAA are the azimuth and altitude of the direction pointed at by the right ascension axis
+\ EE.EEEE is the polar align error in degrees and decimals
+\ PPP.PP is the position angle of the right ascension axis with respect to the celestial pole in degrees and decimals, 
+\ +OO.OOOO is the orthogonality error between the optical axis of the telescope and the declination axis in degrees and decimals, 
+\ +aa.aa is the number of turns of the azimuth adjustment knobs (positive if the polar axis must be moved to the left), 
+\ +bb.bb is the number of turns of the altitude adjustment knob (positive if the polar axis must be moved downwards), 
+\ N is the number of terms used in the modeling, RRRRR.R is the expected RMS error in arcseconds.
 
 \ Get position information
 s" :GA#" MAKE-COMMAND			10u.MountAlt

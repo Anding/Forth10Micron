@@ -3,7 +3,7 @@
 	10u.HighPrecisionOn
 	10u.DualAxisTrackingOn
 	10u.WeatherUpdatesOn
-	10u.UnattendedFlipOn
+\ 	10u.UnattendedFlipOn
 	10u.TrackSiderealRate
 ;
 
@@ -70,13 +70,22 @@
 	type CR abort
 ;
 
-: mount_location ( -- LOG LAT ELEV)
+: mount_location ( -- LAT LONG ELEV)
 \ return the site LAT and LONG in single integer finite fraction format
 \ return the ELEV as an integer
-	10u.SiteLongitude >number~
 	10u.SiteLatitude >number~
+	10u.SiteLongitude >number~
 	10u.SiteElevation >number \ an integer 
 ;	
+
+: mount_hourAngle ( -- HA)
+\ return the Hour Angle of the mount in the range -11 59 59 to 12 00 00
+\ negative means the mount is pointing is A.M., positive P.M.
+	10u.10u.SiderealTime >number~
+	10u.MountRA >number~					( LST RA)
+	- 											( HA)
+	dup -43200 (12 hours in seconds) <= IF 43200 + THEN
+;
 
 : stop-mount ( --)
 	10u.Stop
@@ -99,5 +108,8 @@
 \ WheelID Name SerialNo Slots
 	CR ." Name" 	mount_name tab tab type
 	CR ." S/N"		mount_SN tab tab type
+	CR ." IP"		10u.IPaddress drop 15 tab tab type                                                     
+	CR ." MAC"     10u.MACaddress 1- tab tab type
+	CR ." Ver"     10u.FirmwareVersion 1- tab tab type                                               
 	CR CR
 ;

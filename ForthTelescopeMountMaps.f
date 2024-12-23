@@ -18,6 +18,8 @@
 	10u.MountModel  1-			R@ =>" MOUNT"
 	10u.SerialNumber 1-			R@ =>" MOUNTSN"
 	10u.MountPierSide 1-			R@ =>" PIERSIDE"	
+	10u.ModelAlignmentInfo drop 18 + 7 >float fp~
+	IF	~FITS 						R@ =>" POLARERR" THEN
 	R> drop
 ;
 
@@ -34,3 +36,4 @@
 \ =============================================
 \ MOUNT		- mount name and model
 \ MOUNTSN	- mount serial number
+\ PALARERR	- polar alignment error as deg mm ss
