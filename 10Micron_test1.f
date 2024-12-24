@@ -1,16 +1,9 @@
 \ Testing code with the 10Micron mount
 
-\ Code for controlling the 10Micron mount
-include %idir%\..\ForthBase\libraries\libraries.f
-NEED Forth10Micron
-
-10u.connect
-10u.checksocket drop
-
-CR ." Ask status"
-10u.Status
 CR ." Set high precision mode"
 10u.HighPrecisionOn
+
+-1 -> 10Micron.verbose
 
 .( 10u.TrackingMode ) 10u.TrackingMode
 .( 10u.GPSclockMode ) 10u.GPSclockMode

@@ -6,7 +6,7 @@
 	DOES>	( -- caddr u)
 		count				\ copy the counted string at the PFA to the stack in caddr u format
 		CR 10u.tell 
-		10u.ask type CR
+		10u.ask
 ;
 
 : compose-command {: caddr1 u1 caddr2 u2 -- MNTBUF u3 :}	\ use VFX locals
@@ -32,7 +32,7 @@
 	DOES>	( caddr u -- caddr u)
 		count				\ copy the counted string at the PFA to the stack in caddr u format
 		CR 2swap compose-command 10u.tell 
-		10u.ask type CR
+		10u.ask
 ;
 
 : MAKE-QUIET-COMMAND

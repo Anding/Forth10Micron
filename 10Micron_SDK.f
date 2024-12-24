@@ -36,7 +36,7 @@ NEED finitefractions
 	
 : 10u.tell ( c-addr u --)
 \ pass a command string to the mount	
-	10u.checksocket if drop drop exit then
+	10u.checksocket
 	dup -rot 						( u c-addr u)
 	10Micron.socket writesock				( u len 0 | u error SOCKET_ERROR)
 	SOCKET_ERROR = if ." Failed to write to the socket with error " . CR exit then
@@ -45,7 +45,7 @@ NEED finitefractions
 
 : 10u.ask ( -- c-addr u)
 \ get a response from the mount
-	10u.checksocket if 10Micron.buffer 0 exit then
+	10u.checksocket
 	0 >R 5													( tries R:bytes)
 	begin
 		1- dup 0 >=
@@ -68,6 +68,9 @@ NEED finitefractions
 		then
 	repeat
 	drop 10Micron.buffer R>
-	dup 0= if 2drop s" NO RESPONSE" then	
-	10Micron.verbose if 2dup type CR then ( caddr u)
+	dup 0= if 
+		2drop s" NO RESPONSE"  
+	else
+		10Micron.verbose if 2dup type CR then ( caddr u)
+	then
 ;
