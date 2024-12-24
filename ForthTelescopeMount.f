@@ -76,7 +76,7 @@
 \ return the ELEV as an integer
 	10u.SiteLatitude >number~
 	10u.SiteLongitude >number~
-	10u.SiteElevation >number \ an integer 
+	10u.SiteElevation 1- >float if f>s else 0 then
 ;	
 
 : mount_hourAngle ( -- HA)
