@@ -1,41 +1,17 @@
-\ Testing code with the 10Micron mount
+include %idir%\..\ForthBase\libraries\libraries.f
+NEED Forth10Micron
+NEED simple-tester
 
-CR ." Set high precision mode"
-10u.HighPrecisionOn
+CR
+Tstart
 
--1 -> 10Micron.verbose
-
-.( 10u.TrackingMode ) 10u.TrackingMode
-.( 10u.GPSclockMode ) 10u.GPSclockMode
-.( 10u.AlignmentStarCount ) 10u.AlignmentStarCount		
-.( 10u.ModelAlignmentInfo ) 10u.ModelAlignmentInfo
-.( 10u.MountAlt ) 10u.MountAlt
-.( 10u.TargetAlt ) 10u.TargetAlt
-.( 10u.MountAz ) 10u.MountAz
-.( 10u.TargetAz ) 10u.TargetAz
-.( 10u.MountRA ) 10u.MountRA
-.( 10u.TargetRA ) 10u.TargetRA
-.( 10u.MountDec ) 10u.MountDec
-.( 10u.TargetDec ) 10u.TargetDec
-.( 10u.SiteElevation ) 10u.SiteElevation
-.( 10u.SiteLongitude ) 10u.SiteLongitude
-.( 10u.SiteLatitude ) 10u.SiteLatitude
-.( 10u.TimeToTrackingEnd ) 10u.TimeToTrackingEnd
-.( 10u.LocalDate ) 10u.LocalDate
-.( 10u.LocalTime ) 10u.LocalTime
-.( 10u.LocalDateTime ) 10u.LocalDateTime 
-.( 10u.UTCDateTime ) 10u.UTCDateTime
-.( 10u.SiderealTime ) 10u.SiderealTime
-.( 10u.Status ) 10u.Status
-.( 10u.MountModel ) 10u.MountModel
-.( 10u.IPaddress ) 10u.IPaddress
-.( 10u.MACaddress ) 10u.MACaddress
-.( 10u.FirmwareVersion ) 10u.FirmwareVersion
-.( 10u.SerialNumber ) 10u.SerialNumber
-.( 10u.RefractionCorrectionMode ) 10u.RefractionCorrectionMode
-.( 10u.SpeedCorrectionMode ) 10u.SpeedCorrectionMode
-.( 10u.DualAxisTrackingMode ) 10u.DualAxisTrackingMode
-.( 10u.MountPierSide ) 10u.MountPierSide
-.( 10u.TargetPierSide ) 10u.TargetPierSide
-.( 10u.UnattendedFlipSetting ) 10u.UnattendedFlipSetting
-
+T{ s" +48ß52:52#" >number~ ~ALT$ hashS }T s" +48*52:52" HashS ==
+T{ s" 356ß12:30#" >number~ ~AZ$ hashS }T s" 356*12:30" HashS ==
+T{ s" 06:39:18#" >number~ ~RA$ hashS }T s" 06:39:18" HashS ==
+T{ s" +10ß31:54#" >number~ ~DEC$ hashS }T s" +10*31:54" HashS ==
+T{ s" +070ß51#" >number~ ~FITS$ hashS }T s" 70 51 00" HashS ==
+T{ s" -30ß32#" >number~ ~FITS$ hashS }T s" -30 32 00" HashS ==
+T{ s" 180.2742,+30.3470,00.2967,232.88,-00.0295,+00.57,-00.29,22,00009.5#"
+	drop 18 + 7 >float drop fp~ ~FITS$ hashS }T s" 00 17 42" HashS ==
+CR
+Tend

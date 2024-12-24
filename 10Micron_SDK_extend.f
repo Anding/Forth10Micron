@@ -49,42 +49,30 @@
 
 : ~DEC$ ( deg-min-sec -- caddr u)
 \ obtain a declination string in the format sDD*MM:SS from single integer finite fraction format
-	ff1separator ff2separator ffForcePlus									\ save current
-	'*' -> ff1separator ':' -> ff2separator -1 -> ffForcePlus
-	~$
-	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
+	'*' ':' -1 ~custom$
 ;
 
 : ~RA$ ( hr-min-sec -- caddr u)
 \ obtain a right ascension string in the format HH:MM:SS	from single integer finite fraction format
-	ff1separator ff2separator ffForcePlus									\ save current
-	':' -> ff1separator ':' -> ff2separator 0 -> ffForcePlus
-	~$
-	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
+   ':' ':' 0 ~custom$
 ;
 
 : ~ALT$ ( deg-min-sec -- caddr u)
 \ obtain an altitude string in the format sDD*MM:SS from single integer finite fraction format
-	~DEC$ 
+   '*' ':' -1 ~custom$
 ;
 
 : ~AZ$ ( deg-min-sec -- caddr u)
 \ obtain an azimuth string in the format DDD*MM:SS from single integer finite fraction format	
-	ff1separator ff2separator ffForcePlus									\ save current
-	'*' -> ff1separator ':' -> ff2separator 0 -> ffForcePlus
-	~$
-	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
+   '*' ':' 0 ~custom$
 ;
 
 \ Prepare string formats for FITS
 
 : ~FITS$ ( x-y-z -- caddr u)
 \ obtain an  string in the format XX YY ZZ from single integer finite fraction format	
-	ff1separator ff2separator ffForcePlus									\ save current
-	BL -> ff1separator BL -> ff2separator -1 -> ffForcePlus
-	~$
-	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
-;
+   BL BL 0 ~custom$
+ ;
 
 \ do-or-die error handler
 : 10um.?abort ( caddr u --)

@@ -1,22 +1,41 @@
 \ Testing code with the 10Micron mount
 
-include e:/coding/ptolemy/ip.f
-include e:/coding/ptolemy/10Micron.f
-include e:/coding/ptolemy/celestial.f
-include e:/coding/ptolemy/mount.f
+CR ." Set high precision mode"
+10u.HighPrecisionOn
 
-( RA) 05 36 25 ( DEC) -05 22 33 MAKE-TARGET M42
-( RA) 07 37 40 ( DEC) -14 32 05 MAKE-TARGET M47
+-1 -> 10Micron.verbose
 
-CR
-.( Check the telescope and try...) CR
-.( CONNECT-MOUNT) CR
-.( UNPARK) CR
-.( M42 GOTO) CR
-.( M47 GOTO) CR
-.( HALT) CR
-.( PARK) CR
-
-	
-		
+.( 10u.TrackingMode ) 10u.TrackingMode
+.( 10u.GPSclockMode ) 10u.GPSclockMode
+.( 10u.AlignmentStarCount ) 10u.AlignmentStarCount		
+.( 10u.ModelAlignmentInfo ) 10u.ModelAlignmentInfo
+.( 10u.MountAlt ) 10u.MountAlt
+.( 10u.TargetAlt ) 10u.TargetAlt
+.( 10u.MountAz ) 10u.MountAz
+.( 10u.TargetAz ) 10u.TargetAz
+.( 10u.MountRA ) 10u.MountRA
+.( 10u.TargetRA ) 10u.TargetRA
+.( 10u.MountDec ) 10u.MountDec
+.( 10u.TargetDec ) 10u.TargetDec
+.( 10u.SiteElevation ) 10u.SiteElevation
+.( 10u.SiteLongitude ) 10u.SiteLongitude
+.( 10u.SiteLatitude ) 10u.SiteLatitude
+.( 10u.TimeToTrackingEnd ) 10u.TimeToTrackingEnd
+.( 10u.LocalDate ) 10u.LocalDate
+.( 10u.LocalTime ) 10u.LocalTime
+.( 10u.LocalDateTime ) 10u.LocalDateTime 
+.( 10u.UTCDateTime ) 10u.UTCDateTime
+.( 10u.SiderealTime ) 10u.SiderealTime
+.( 10u.Status ) 10u.Status
+.( 10u.MountModel ) 10u.MountModel
+.( 10u.IPaddress ) 10u.IPaddress
+.( 10u.MACaddress ) 10u.MACaddress
+.( 10u.FirmwareVersion ) 10u.FirmwareVersion
+.( 10u.SerialNumber ) 10u.SerialNumber
+.( 10u.RefractionCorrectionMode ) 10u.RefractionCorrectionMode
+.( 10u.SpeedCorrectionMode ) 10u.SpeedCorrectionMode
+.( 10u.DualAxisTrackingMode ) 10u.DualAxisTrackingMode
+.( 10u.MountPierSide ) 10u.MountPierSide
+.( 10u.TargetPierSide ) 10u.TargetPierSide
+.( 10u.UnattendedFlipSetting ) 10u.UnattendedFlipSetting
 

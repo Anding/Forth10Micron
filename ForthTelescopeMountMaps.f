@@ -19,6 +19,7 @@ NEED forth-map
 	10u.MountModel  1-			R@ =>" MOUNT"
 	10u.SerialNumber 1-			R@ =>" MOUNTSN"
 	10u.MountPierSide 1-			R@ =>" PIERSIDE"	
+	10u.AlignmentStarCount 1-  R@ =>" ALGNSTRS"	
 	10u.ModelAlignmentInfo drop 18 + 7 >float
 	IF	fp~ ~FITS$ 					R@ =>" POLARERR" THEN
 	R> drop
@@ -35,6 +36,7 @@ NEED forth-map
 
 \ FITS keywords defined here for the ASI camera
 \ =============================================
-\ MOUNT		- mount name and model
+\ MOUNT		- mount name
 \ MOUNTSN	- mount serial number
+\ ALGNSTRS	- number of alignment stars
 \ PALARERR	- polar alignment error as deg mm ss
