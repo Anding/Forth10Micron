@@ -71,9 +71,12 @@ s" :GREF#"	MAKE-COMMAND		10u.RefractionCorrectionMode
 s" :GSC#"	MAKE-COMMAND		10u.SpeedCorrectionMode
 s" :Gdat#" MAKE-COMMAND			10u.DualAxisTrackingMode
 s" :pS#"  MAKE-COMMAND			10u.MountPierSide
-s" :GTsid#" MAKE-COMMAND		10u.TargetPierSide
 \ East#, telescope is on the east of the pier looking west
 \ West#, telescope is on the west of the pier looking east
+s" :GTsid#" MAKE-COMMAND		10u.TargetPierSide
+\ 0 no target defined, or the target object is located in a position where it is not possible to go
+\ 2 the target is located in a position where the mount would slew the telescope to the west side so that after the slew the ":pS#" command would return "West#".
+\ 3 the target is located in a position where the mount would slew the telescope to the east side so that after the slew the ":pS#" command would return "East#".
 s" :Guaf#" MAKE-COMMAND			10u.UnattendedFlipSetting
 
 \ Movement commands

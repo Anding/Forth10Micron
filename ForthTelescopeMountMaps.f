@@ -15,12 +15,12 @@ NEED forth-map
 	mount_location
 	rot ~FITS$						R@ =>" SITELAT"
 	swap ~FITS$						R@ =>" SITELONG"	
-	~FITS$							R@ =>" SITEELEV"
+	(.)								R@ =>" SITEELEV"
 	10u.MountModel  1-			R@ =>" MOUNT"
 	10u.SerialNumber 1-			R@ =>" MOUNTSN"
 	10u.MountPierSide 1-			R@ =>" PIERSIDE"	
-	10u.ModelAlignmentInfo drop 18 + 7 >float fp~
-	IF	~FITS$ 						R@ =>" POLARERR" THEN
+	10u.ModelAlignmentInfo drop 18 + 7 >float
+	IF	fp~ ~FITS$ 					R@ =>" POLARERR" THEN
 	R> drop
 ;
 
