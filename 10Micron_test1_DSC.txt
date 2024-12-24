@@ -1,0 +1,113 @@
+ VFX Forth for Windows x86
+  © MicroProcessor Engineering Ltd, 1998-2021 
+
+ Version: 5.20 [build 3797]
+ Build date: 27 May 2021
+
+ Free dictionary = 7395214 bytes [7221kb]
+
+
+include E:\Coding\Ptolemy\dashboard\DSC_test1.f 
+Including E:\Coding\Ptolemy\dashboard\DSC_test1.f
+Including %idir%\..\..\ForthBase\libraries\libraries.f
+Including %idir%\local.f
+Including %libdir%\ForthBase\libraries\manifest.f
+Including %libdir%\Forth10Micron\10Micron_SDK.f
+Including %idir%\..\ForthBase\libraries\libraries.f
+Including %libdir%\ForthBase\libraries\manifest.f
+Including %libdir%\ForthBase\ForthBase.f
+FORTHBASE is redefined 
+BUFFER: is redefined 
+TWIST is redefined 
+Including %libdir%\ForthBase\libraries\manifest.f
+Including %libdir%\ForthBase\network\VFX32network.f
+Including C:\MPE\VfxForth\Lib\Win32\Genio\SocketIo.fth
+Including %libdir%\ForthBase\libraries\manifest.f
+Including %libdir%\ForthBase\FiniteFractions\FiniteFractions.f
+Including %libdir%\ForthBase\FiniteFractions\FiniteFractionsTypes.f
+DEC is redefined 
+Including %libdir%\ForthBase\FiniteFractions\FiniteFractionsFloatingPoint.f
+Including %libdir%\Forth10Micron\10Micron_SDK_extend.f
+Including %libdir%\Forth10Micron\10Micron_SDK_commands.f
+Including %libdir%\Forth10Micron\ForthTelescopeMount.f
+Including %libdir%\Forth10Micron\ForthTelescopeMountMaps.f
+Including %libdir%\ForthBase\libraries\manifest.f
+Including %libdir%\forth-map\map.fs
+Including %libdir%\forth-map\map-tools.fs
+Connection succeeded on socket 1044 
+
+
+
+Err# -57005 ERR: Windows exception
+ Source: "E:\Coding\Ptolemy\dashboard\DSC_test1.f" on line 10 
+ -> FITSmap add-mountFITS 
+                         ^
+include E:\Coding\Forth10Micron\10micron_test1.f 
+Including E:\Coding\Forth10Micron\10micron_test1.f
+Set high precision mode
+10u.TrackingMode 
+1
+10u.GPSclockMode 
+0#
+10u.AlignmentStarCount 
+82#
+10u.ModelAlignmentInfo 
+180.2742,+30.3470,00.2967,232.88,-00.0295,+00.57,-00.29,22,00009.5#
+10u.MountAlt 
++48ß52:52#
+10u.TargetAlt 
++48ß52:52#
+10u.MountAz 
+356ß12:30#
+10u.TargetAz 
+356ß12:27#
+10u.MountRA 
+06:39:18#
+10u.TargetRA 
+06:39:18#
+10u.MountDec 
++10ß31:54#
+10u.TargetDec 
++10ß31:54#
+10u.SiteElevation 
++1736.6#
+10u.SiteLongitude 
++070ß51#
+10u.SiteLatitude 
+-30ß32#
+10u.TimeToTrackingEnd 
+0030#
+10u.LocalDate 
+12/24/24#
+10u.LocalTime 
+02:19:57#
+10u.LocalDateTime 
+12/24/24,02:19:57#
+10u.UTCDateTime 
+12/24/24,05:19:57#
+10u.SiderealTime 
+06:49:29#
+10u.Status 
+0#
+10u.MountModel 
+10micron GM2000HPS#
+10u.IPaddress 
+192.168.001.107,255.255.255.000,192.168.001.001,M#
+10u.MACaddress 
+00:C0:08:A3:50:3D#
+10u.FirmwareVersion 
+3.1.10#
+10u.SerialNumber 
+07206073609258177599#
+10u.RefractionCorrectionMode 
+1
+10u.SpeedCorrectionMode 
+0
+10u.DualAxisTrackingMode 
+1
+10u.MountPierSide 
+West#
+10u.TargetPierSide 
+3
+10u.UnattendedFlipSetting 
+0
