@@ -11,7 +11,7 @@ NEED forth-map
 	mount_horizon swap
 	swap ~FITS$						R@ =>" OBJCTALT"
 	~FITS$							R@ =>" OBJCTAZ"	
-	s"  "								R@ =>" OBJCTHA"
+	mount_hourAngle ~FITS$		R@ =>" OBJCTHA"
 	mount_location
 	rot ~FITS$						R@ =>" SITELAT"
 	swap ~FITS$						R@ =>" SITELONG"	
