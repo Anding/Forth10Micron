@@ -85,7 +85,9 @@
 	10u.SiderealTime >number~
 	10u.MountRA >number~					( LST RA)
 	- 											( HA)
-	dup -43200 ( 12 hours in seconds) <= IF 43200 + THEN
+	dup  43200 >= IF 86400 ( 24 hours in seconds) - THEN
+	dup -43200 <  IF 86400 + THEN	
+	\ place in range -12 00 00 - 11 59 59
 ;
 
 : stop-mount ( --)
