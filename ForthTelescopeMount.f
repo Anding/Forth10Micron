@@ -64,8 +64,8 @@
 
 : ->mount_equatorial ( RA DEC --)
 \ slew to RA DEC provied in single integer finite fraction format and start tracking
-	~DEC$ 10u.SetTargetDec 10um.?abort
-	~RA$ 10u.SetTargetRA 10um.?abort
+	~DEC$ 10u.SetTargetDec 10u.?abort
+	~RA$ 10u.SetTargetRA 10u.?abort
 	10u.UnPark
 	10u.SlewToEquatorialTarget ( caddr u)
 	over c@ '0' = IF 2drop wait-mount EXIT THEN		\ '0' is the no-error condition
@@ -80,8 +80,8 @@
 
 : ->mount_horizon ( ALT AZ --)
 \ slew to ALT AZ provied in single integer finite fraction format with no tracking
-	~AZ$ 10u.SetTargetAz 10um.?abort
-	~ALT$ 10u.SetTargetAlt 10um.?abort
+	~AZ$ 10u.SetTargetAz 10u.?abort
+	~ALT$ 10u.SetTargetAlt 10u.?abort
 	10u.UnPark
 	10u.SlewToHorizonTarget ( caddr u)
 	over c@ '0' = IF 2drop wait-mount EXIT THEN		\ '0' is the no-error condition

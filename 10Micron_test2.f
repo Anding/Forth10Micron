@@ -1,5 +1,14 @@
 \ Testing code with the 10Micron mount
 
+include %idir%\..\..\ForthBase\libraries\libraries.f
+NEED Forth10Micron
+NEED forth-map
+
+	192 168 1 107 toIPv4 -> 10Micron.IP		\ DSC
+\ 	192 168 1  14 toIPv4 -> 10Micron.IP		\ DB
+
+add-mount
+
 CR ." Set high precision mode"
 10u.HighPrecisionOn
 

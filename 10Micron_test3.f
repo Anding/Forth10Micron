@@ -1,22 +1,20 @@
 \ Testing code with the 10Micron mount
+NEED Forth10Micron
 
-include e:/coding/ptolemy/ip.f
-include e:/coding/ptolemy/10Micron.f
-include e:/coding/ptolemy/celestial.f
-include e:/coding/ptolemy/mount.f
+	192 168 1 107 toIPv4 -> 10Micron.IP		\ DSC
+\ 	192 168 1  14 toIPv4 -> 10Micron.IP		\ DB
 
-( RA) 05 36 25 ( DEC) -05 22 33 MAKE-TARGET M42
-( RA) 07 37 40 ( DEC) -14 32 05 MAKE-TARGET M47
+CR ." Connecting to mount"
+add-mount
 
-CR
-.( Check the telescope and try...) CR
-.( CONNECT-MOUNT) CR
-.( UNPARK) CR
-.( M42 GOTO) CR
-.( M47 GOTO) CR
-.( HALT) CR
-.( PARK) CR
+CR ." Set high precision mode"
+10u.HighPrecisionOn
 
-	
-		
+map CONSTANT FITSmap
+FITSmap add-mountFITS 
+CR FITSmap .map CR
+
+map CONSTANT DASHmap
+add-mountDASH 
+CR DASHmap .map CR
 
