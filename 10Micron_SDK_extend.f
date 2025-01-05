@@ -74,14 +74,40 @@
    BL BL 0 ~custom$
  ;
 
-\ do-or-die error handler
-: 10um.?abort ( caddr u --)
+: 10u.?abort ( caddr u --)
+\ do-or-die error handler	
 	flushKeys	
 	drop c@						\ the first character in the buffer
 	'1' = IF EXIT THEN		\ '1' is the valid return condition
 	." Mount responds invalid"
 	abort 
 ;
+
+\ Convenience functions
+
+:	10u.>num ( caddr u -- n)
+\ take a 10u return string and convert to an integer or otherwise return 0
+	1- isInteger? ( d 2 | n 1 | 0)
+	case
+		0 of 0 endcase
+		1 of ( n) endcase
+		2 of 2drop 0 endcase
+	endcase
+;
+
+BEGIN-ENUMS 10u.modes
+	+" Off"
+	+" On"
+END-ENUMS
+
+: 10u.OnOff? ( caddr u -- caddr u)
+	10u.>num 10u.modes
+;
+	
+	
+
+	
+	
 
 		
 	

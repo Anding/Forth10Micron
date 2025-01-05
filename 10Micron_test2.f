@@ -38,4 +38,7 @@ CR ." Set high precision mode"
 .( 10u.MountPierSide ) 10u.MountPierSide
 .( 10u.TargetPierSide ) 10u.TargetPierSide
 .( 10u.UnattendedFlipSetting ) 10u.UnattendedFlipSetting
+.( 10u.MeridianTrackingLimit) 10u.MeridianTrackingLimit
+.( 10u.MeridianSlewLimit) 10u.MeridianSlewLimit
+
 

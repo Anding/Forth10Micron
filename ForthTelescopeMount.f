@@ -12,9 +12,26 @@
 	10u.Park
 ;
 
+: mount_status ( -- caddr u)
+	10u.status 10u.>num 10u.statuses
+;
+
+: mount_pierside ( -- caddr u)
+	10u.MountPierSide 1-
+;
+
+: target_pierside ( -- caddr u)
+	10u.TargetPierSide 10u.>num
+	CASE
+		2 OF s" West" ENDOF
+		3 OF s" East" ENDOF
+		s" n/a" rot
+	ENDCASE		
+;
+
 : mount_busy ( -- flag)
-	10u.Status	( caddr u)
-	>number CASE
+	10u.status 10u.>num
+	CASE
 	 0 OF 0 ENDOF
 	 1 OF 0 ENDOF
 	 2 OF -1 ENDOF
@@ -80,7 +97,7 @@
 ;	
 
 : mount_hourAngle ( -- HA)
-\ return the Hour Angle of the mount in the range -11 59 59 to 12 00 00
+\ return the Hour Angle of the mount in the range -11 59 59 to 12 00 00 in single interger finite fraction format
 \ negative means the mount is pointing is A.M., positive P.M.
 	10u.SiderealTime >number~
 	10u.MountRA >number~					( LST RA)
@@ -88,6 +105,11 @@
 	dup  43200 >= IF 86400 ( 24 hours in seconds) - THEN
 	dup -43200 <  IF 86400 + THEN	
 	\ place in range -12 00 00 - 11 59 59
+;
+
+: mount_timeToTrackingEnd ( -- T)
+\ return the estimated time to tracking end due to horizon / flip limits in single integer f.f. format
+	10u.TimeToTrackingEnd 10u.>num 60 *
 ;
 
 : stop-mount ( --)

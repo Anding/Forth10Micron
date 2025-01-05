@@ -18,10 +18,12 @@ NEED forth-map
 	(.)								R@ =>" SITEELEV"
 	10u.MountModel  1-			R@ =>" MOUNT"
 	10u.SerialNumber 1-			R@ =>" MOUNTSN"
-	10u.MountPierSide 1-			R@ =>" PIERSIDE"	
+	mount_pierside					R@ =>" PIERSIDE"	
 	10u.AlignmentStarCount 1-  R@ =>" ALGNSTRS"	
 	10u.ModelAlignmentInfo drop 18 + 7 >float
 	IF	fp~ ~FITS$ 					R@ =>" POLARERR" THEN
+	10u.DualAxisTrackingMode 
+	10u.OnOff?						R@ =>" DUALAXIS"	
 	R> drop
 ;
 
@@ -40,3 +42,27 @@ NEED forth-map
 \ MOUNTSN	- mount serial number
 \ ALGNSTRS	- number of alignment stars
 \ PALARERR	- polar alignment error as deg mm ss
+\ DUALAXIS  - dual axis tracking mode on / off
+
+: add-mountDASH ( map --)
+\ additional key value pairs for dashboard telemetry
+	>R
+	R@ add-mountFITS
+	mount_status					R@ =>" STATUS"
+	10u.TrackingMode
+	10u.OnOff?						R@ =>" TRACKING"
+	10u.RefractionCorrectionMode
+	10u.OnOff?						R@ =>" REFRACTN"
+	10u.SpeedCorrectionMode
+	10u.OnOff?						R@ =>" SPDCORCT"
+	target_pierside				R@ =>" TGTPSIDE"
+	10u.UnattendedFlipMode
+	10u.OnOff?						R@ =>" UNATFLIP"
+	10u.timeToTrackingEnd
+	~FITS$							R@ =>" TRACKEND"
+	10u.MeridianTrackingLimit
+	10u.>num (.)					R@ =>" TRKLIMIT"
+	10u.MeridianSlewLimit
+	10u.>num (.)					R@ =>" SLWLIMIT"
+;
+	

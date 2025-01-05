@@ -45,7 +45,7 @@ s" :GS#"	MAKE-COMMAND			10u.SiderealTime
 
 \ Get operating information
 s" :Gstat#" MAKE-COMMAND 		10u.Status
-	BEGIN-ENUMS 					10u-status-list
+	BEGIN-ENUMS 					10u.Statuses
 (  0)	+" Tracking"
 		+" Stopped by command"
 		+" Slewing to park"
@@ -77,7 +77,9 @@ s" :GTsid#" MAKE-COMMAND		10u.TargetPierSide
 \ 0 no target defined, or the target object is located in a position where it is not possible to go
 \ 2 the target is located in a position where the mount would slew the telescope to the west side so that after the slew the ":pS#" command would return "West#".
 \ 3 the target is located in a position where the mount would slew the telescope to the east side so that after the slew the ":pS#" command would return "East#".
-s" :Guaf#" MAKE-COMMAND			10u.UnattendedFlipSetting
+s" :Guaf#" MAKE-COMMAND			10u.UnattendedFlipMode
+s" :Glmt#" MAKE-COMMAND			10u.MeridianTrackingLimit
+s" :Glms#" MAKE-COMMAND			10u.MeridianSlewLimit
 
 \ Movement commands
 s" :STOP#" MAKE-QUIET-COMMAND 10u.Stop
