@@ -64,5 +64,6 @@ NEED forth-map
 	10u.>num (.)					R@ =>" TRKLIMIT"
 	10u.MeridianSlewLimit
 	10u.>num (.)					R@ =>" SLWLIMIT"
+	R> drop
 ;
 	

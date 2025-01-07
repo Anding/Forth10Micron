@@ -15,6 +15,6 @@ FITSmap add-mountFITS
 CR FITSmap .map CR
 
 map CONSTANT DASHmap
-add-mountDASH 
+DASHmap add-mountDASH 
 CR DASHmap .map CR
 
