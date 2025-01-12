@@ -12,7 +12,7 @@ NEED forth-map
 	swap ~FITS$						R@ =>" OBJCTALT"
 	~FITS$							R@ =>" OBJCTAZ"	
 	mount_hourAngle ~FITS$		R@ =>" OBJCTHA"
-	mount_siderealTime			R@ =>" SIDEREAL"
+	mount_siderealTime ~FITS$		R@ =>" SIDEREAL"
 	mount_location
 	rot ~FITS$						R@ =>" SITELAT"
 	swap ~FITS$						R@ =>" SITELONG"	
@@ -49,7 +49,6 @@ NEED forth-map
 \ additional key value pairs for dashboard telemetry
 	>R
 	R@ add-mountFITS
-	10u.LocalDateTine
 	mount_status					R@ =>" STATUS"
 	10u.TrackingMode
 	10u.OnOff?						R@ =>" TRACKING"
@@ -67,7 +66,7 @@ NEED forth-map
 	10u.MeridianSlewLimit
 	10u.>num (.)					R@ =>" SLWLIMIT"
 	10u.LocalTime 
-	~FITS$							R@ =>" LOCALTME"
+	>number~ ~FITS$						R@ =>" LOCALTME"
 	R> drop
 ;
 	
