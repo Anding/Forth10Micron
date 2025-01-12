@@ -9,7 +9,6 @@
 ;
 
 : remove-mount ( --)
-	10u.Park
 ;
 
 : mount_status ( -- caddr u)
@@ -91,7 +90,7 @@
 : mount_location ( -- LAT LONG ELEV)
 \ return the site LAT and LONG in single integer finite fraction format
 \ return the ELEV as an integer
-	10u.SiteLatitude >number~
+	10u.SiteLatitude >number~ 1- *						\ convert to West is negative
 	10u.SiteLongitude >number~
 	10u.SiteElevation 1- >float if fr>s else 0 then
 ;	
@@ -105,6 +104,11 @@
 	dup  43200 >= IF 86400 ( 24 hours in seconds) - THEN
 	dup -43200 <  IF 86400 + THEN	
 	\ place in range -12 00 00 - 11 59 59
+;
+
+: mount_sidereralTime ( --T)
+\ return the sidereal time
+	10u.SiderealTime >number~
 ;
 
 : mount_timeToTrackingEnd ( -- T)

@@ -12,12 +12,13 @@ NEED forth-map
 	swap ~FITS$						R@ =>" OBJCTALT"
 	~FITS$							R@ =>" OBJCTAZ"	
 	mount_hourAngle ~FITS$		R@ =>" OBJCTHA"
+	mount_siderealTime			R@ =>" SIDEREAL"
 	mount_location
 	rot ~FITS$						R@ =>" SITELAT"
 	swap ~FITS$						R@ =>" SITELONG"	
 	(.)								R@ =>" SITEELEV"
-	10u.MountModel  1-			R@ =>" MOUNT"
-	10u.SerialNumber 1-			R@ =>" MOUNTSN"
+	mount_name						R@ =>" MOUNT"
+	mount_SN							R@ =>" MOUNTSN"
 	mount_pierside					R@ =>" PIERSIDE"	
 	10u.AlignmentStarCount 1-  R@ =>" ALGNSTRS"	
 	10u.ModelAlignmentInfo drop 18 + 7 >float
@@ -48,6 +49,7 @@ NEED forth-map
 \ additional key value pairs for dashboard telemetry
 	>R
 	R@ add-mountFITS
+	10u.LocalDateTine
 	mount_status					R@ =>" STATUS"
 	10u.TrackingMode
 	10u.OnOff?						R@ =>" TRACKING"
@@ -58,12 +60,14 @@ NEED forth-map
 	target_pierside				R@ =>" TGTPSIDE"
 	10u.UnattendedFlipMode
 	10u.OnOff?						R@ =>" UNATFLIP"
-	10u.timeToTrackingEnd
+	mount_timeToTrackingEnd
 	~FITS$							R@ =>" TRACKEND"
 	10u.MeridianTrackingLimit
 	10u.>num (.)					R@ =>" TRKLIMIT"
 	10u.MeridianSlewLimit
 	10u.>num (.)					R@ =>" SLWLIMIT"
+	10u.LocalTime 
+	~FITS$							R@ =>" LOCALTME"
 	R> drop
 ;
 	
