@@ -87,7 +87,8 @@
 
 :	10u.>num ( caddr u -- n)
 \ take a 10u return string and convert to an integer or otherwise return 0
-	1- isInteger? ( d 2 | n 1 | 0)
+	2dup + 1- c@ '#' = IF 1- THEN		\ # some but not all returns terminate in #
+	isInteger? ( d 2 | n 1 | 0)
 	case
 		0 of 0 endof
 		1 of ( n) endof
