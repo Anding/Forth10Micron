@@ -4,7 +4,6 @@
 	10u.HighPrecisionOn
 \	10u.DualAxisTrackingOn
 \	10u.WeatherUpdatesOn
-\ 	10u.UnattendedFlipOn
 \	10u.TrackSiderealRate
 ;
 
