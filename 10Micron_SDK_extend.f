@@ -5,7 +5,7 @@
 		$,					\ compile the caddr u string to the parameter field as a counted string
 	DOES>	( -- caddr u)
 		count				\ copy the counted string at the PFA to the stack in caddr u format
-		CR 10u.tell 
+		10u.tell 
 		10u.ask
 ;
 
@@ -31,7 +31,7 @@
 		$,
 	DOES>	( caddr u -- caddr u)
 		count				\ copy the counted string at the PFA to the stack in caddr u format
-		CR 2swap compose-command 10u.tell 
+		2swap compose-command 10u.tell 
 		10u.ask
 ;
 
@@ -42,7 +42,7 @@
 		$,
 	DOES>	( --)
 		count				\ copy the counted string at the PFA to the stack in caddr u format
-		CR 10u.tell 
+		10u.tell 
 ;
 
 \ Prepare string formats for 10u mount commands

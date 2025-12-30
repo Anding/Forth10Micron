@@ -2,10 +2,10 @@
 	flushkeys
 	10u.connect
 	10u.HighPrecisionOn
-\	10u.DualAxisTrackingOn
-\	10u.WeatherUpdatesOn
+	10u.DualAxisTrackingOn
+	10u.WeatherUpdatesOn
 \ 	10u.UnattendedFlipOn
-\	10u.TrackSiderealRate
+	10u.TrackSiderealRate
 ;
 
 : remove-mount ( --)
@@ -51,7 +51,7 @@
 	begin
 		mount_busy
 	while
-		." . " 250 ms
+		250 ms
 	repeat
 ;
 
@@ -132,13 +132,11 @@
 
 \ convenience functions
 
-: what-mount? ( --)
+: check-mount ( --)
 \ report the current mount to the user
 \ WheelID Name SerialNo Slots
-	CR ." Name" 	mount_name tab tab type
-	CR ." S/N"		mount_SN tab tab type
-	CR ." IP"		10u.IPaddress drop 15 tab tab type                                                     
-	CR ." MAC"     10u.MACaddress 1- tab tab type
-	CR ." Ver"     10u.FirmwareVersion 1- tab tab type                                               
-	CR CR
+		CR 
+	." Mount IP = "	10u.IPaddress drop 15 type  	
+	." ; Name = " mount_name type
+
 ;

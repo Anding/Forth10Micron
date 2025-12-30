@@ -5,7 +5,7 @@ NEED Forth10Micron
 NEED forth-map
 
 	192 168 1 107 toIPv4 -> 10Micron.IP		\ DSC
-\ 	192 168 1  14 toIPv4 -> 10Micron.IP		\ DB
+\ 	192 168 0 15 toIPv4 -> 10Micron.IP		\ DB
 
 add-mount
 

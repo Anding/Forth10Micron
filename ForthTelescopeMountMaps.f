@@ -15,7 +15,7 @@ NEED forth-map
 	mount_siderealTime ~FITS$		R@ =>" SIDEREAL"
 	mount_location
 	rot ~FITS$						R@ =>" SITELAT"
-	swap ~FITS$						R@ =>" SITELONG"	
+	swap ~FITS$						R@ =>" SITELONG"
 	(.)								R@ =>" SITEELEV"
 	mount_name						R@ =>" MOUNT"
 	mount_SN							R@ =>" MOUNTSN"

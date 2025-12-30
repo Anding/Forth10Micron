@@ -18,13 +18,12 @@ NEED finitefractions
 
 : 10u.connect ( -- )
 \ try to connect to the 10 Micron mount
-	CR
 	10Micron.IP 0 3490 TCPConnect
 	?dup 0 = if 
 		dup -> 10Micron.socket
-		." Connection succeeded on socket " .
+		." 10Micron connected on socket " .
 	else
-		." Connection failed with WinSock error number " . abort
+		." 10Micron connection failed with WinSock error number " . abort
 	then
 ;
 
