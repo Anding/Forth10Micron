@@ -5,14 +5,15 @@ s" :AP#" MAKE-QUIET-COMMAND 	10u.StartTracking
 
 \ GPS commands
 s" :gtg#" MAKE-COMMAND			10u.GPSclockMode
+s" :gps#" MAKE-COMMAND			10.NMEAstring
 
 \ Sync control and model building
 s" :getalst#" MAKE-COMMAND		10u.AlignmentStarCount
 s" :getain#" MAKE-COMMAND		10u.ModelAlignmentInfo
 \ "ZZZ.ZZZZ,+AA.AAAA,EE.EEEE,PPP.PP,+OO.OOOO,+aa.aa,+bb.bb,NN,RRRRR.R#"
 \ "000.3469,+22.3778,00.3310,284.32,-00.0403,+00.28,+00.04,08,00004.7#"
-\  012345678901234567890123456789012345678901234567890123456789012345
-\  0         1         2         3         4         5         6
+\ "000.4126,+22.3674,00.3882,280.64,E,+00.34,+00.03,E,E#"
+\ "000.4126,+22.3674,00.3882,280.64,E       ,+00.34,+00.03,E ,E#"
 \ ZZZ.ZZZZ and +AA.AAAA are the azimuth and altitude of the direction pointed at by the right ascension axis
 \ EE.EEEE is the polar align error in degrees and decimals
 \ PPP.PP is the position angle of the right ascension axis with respect to the celestial pole in degrees and decimals, 
@@ -103,11 +104,13 @@ s" :FLIP#" MAKE-COMMAND			10u.FlipPierSide
 s" :U1#" MAKE-QUIET-COMMAND 			10u.HighPrecisionOn
 s" :SWOL0#" MAKE-QUIET-COMMAND 		10u.WakeOnLANoff
 s" :SWOL1#" MAKE-QUIET-COMMAND 		10u.WakeOnLANon
-s" :Sdat0#" MAKE-QUIET-COMMAND 		10u.DualAxisTrackingOff
-s" :Sdat1#" MAKE-QUIET-COMMAND 		10u.DualAxisTrackingOn
-s" :WSS0#" MAKE-QUIET-COMMAND			10u.WeatherUpdatesOff
-s" :WSS2#" MAKE-QUIET-COMMAND 		10u.WeatherUpdatesOn
+s" :Sdat0#" MAKE-COMMAND 		10u.DualAxisTrackingOff
+s" :Sdat1#" MAKE-COMMAND 		10u.DualAxisTrackingOn
+s" :WSS0#" MAKE-COMMAND			10u.WeatherUpdatesOff
+s" :WSS2#" MAKE-COMMAND 		10u.WeatherUpdatesOn
 s" :Suaf0#" MAKE-QUIET-COMMAND		10u.UnattendedFlipOff
 s" :Suaf1#" MAKE-QUIET-COMMAND		10u.UnattendedFlipOn
+s" :SREF0#" MAKE-COMMAND 10u.RefractionCorrectionOff
+s" :SREF1#" MAKE-COMMAND 10u.RefractionCorrectionOn
 s" :USEROK#" MAKE-QUIET-COMMAND 		10u.UserOK
 s" :shutdown#" MAKE-QUIET-COMMAND 	10u.shutdown

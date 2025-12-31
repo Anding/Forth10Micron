@@ -2,8 +2,8 @@
 	flushkeys
 	10u.connect
 	10u.HighPrecisionOn
-	10u.DualAxisTrackingOn
-	10u.WeatherUpdatesOn
+	10u.DualAxisTrackingOn 2drop
+	10u.WeatherUpdatesOn 2drop
 \ 	10u.UnattendedFlipOn
 	10u.TrackSiderealRate
 ;
@@ -90,8 +90,8 @@
 : mount_location ( -- LAT LONG ELEV)
 \ return the site LAT and LONG in single integer finite fraction format
 \ return the ELEV as an integer
-	10u.SiteLatitude >number~ -1 *						\ convert to West is negative
-	10u.SiteLongitude >number~
+	10u.SiteLatitude >number~
+	10u.SiteLongitude >number~ -1 *						\ convert to West is negative
 	10u.SiteElevation 1- >float if fr>s else 0 then
 ;	
 
