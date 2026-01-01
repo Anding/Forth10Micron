@@ -4,7 +4,6 @@
 	10u.HighPrecisionOn
 	10u.DualAxisTrackingOn 2drop
 	10u.WeatherUpdatesOn 2drop
-\ 	10u.UnattendedFlipOn
 	10u.TrackSiderealRate
 ;
 
@@ -79,11 +78,11 @@
 ;
 
 : ->mount_horizon ( ALT AZ --)
-\ slew to ALT AZ provied in single integer finite fraction format with no tracking
+\ slew to ALT AZ provied in single integer finite fraction format and start tracking
 	~AZ$ 10u.SetTargetAz 10u.?abort
 	~ALT$ 10u.SetTargetAlt 10u.?abort
 	10u.UnPark
-	10u.SlewToHorizonTarget ( caddr u)
+	10u.SlewToEquatorialTarget ( caddr u)
 	over c@ '0' = IF 2drop wait-mount EXIT THEN		\ '0' is the no-error condition
 	type CR abort
 ;
@@ -136,8 +135,7 @@
 : check-mount ( --)
 \ report the current mount to the user
 \ WheelID Name SerialNo Slots
-		CR 
-	." Mount IP = "	10u.IPaddress drop 15 type  	
-	." ; Name = " mount_name type
-
+	CR 
+	." Mount Name = " mount_name type
+	." ; Status = " mount_status type
 ;

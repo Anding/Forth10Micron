@@ -12,7 +12,7 @@ NEED forth-map
 	swap ~FITS$						R@ =>" OBJCTALT"
 	~FITS$							R@ =>" OBJCTAZ"	
 	mount_hourAngle ~FITS$		R@ =>" OBJCTHA"
-	mount_siderealTime ~FITS$		R@ =>" SIDEREAL"
+	mount_siderealTime ~FITS$	R@ =>" SIDEREAL"
 	mount_location
 	rot ~FITS$						R@ =>" SITELAT"
 	swap ~FITS$						R@ =>" SITELONG"
