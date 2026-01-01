@@ -4,25 +4,31 @@ NEED forth-map
 : add-mountFITS ( map --)
 \ add key value pairs for FITS observation parameters
 	>R
-	s"   "							R@ =>" #MOUNT"			\ a header to indicate the source of these FITS values
-	mount_equatorial 
-	swap ~FITS$						R@ =>" OBJCTRA"
-	~FITS$							R@ =>" OBJCTDEC"
+	s"   "								R@ =>" #MOUNT"			\ a header to indicate the source of these FITS values
+	mount_equatorial swap
+	~FITS$								R@ =>" OBJCTRA"
+	~FITS$								R@ =>" OBJCTDEC"
+	mount_equatorial swap
+	~fp 15e0 f* 4 (f.)		R@ =>" RA"
+	~fp 4 (f.)						R@ =>" Dec"	
 	mount_horizon swap
-	swap ~FITS$						R@ =>" OBJCTALT"
-	~FITS$							R@ =>" OBJCTAZ"	
+	~FITS$								R@ =>" OBJCTALT"
+	~FITS$								R@ =>" OBJCTAZ"	
+	mount_horizon swap
+	~fp 4 (f.)						R@ =>" CENTALT"
+	~fp 4 (f.)						R@ =>" CENTAZ"	
 	mount_hourAngle ~FITS$		R@ =>" OBJCTHA"
 	mount_siderealTime ~FITS$	R@ =>" SIDEREAL"
 	mount_location
 	rot ~FITS$						R@ =>" SITELAT"
 	swap ~FITS$						R@ =>" SITELONG"
-	(.)								R@ =>" SITEELEV"
+	(.)										R@ =>" SITEELEV"
 	mount_name						R@ =>" MOUNT"
 	mount_SN							R@ =>" MOUNTSN"
-	mount_pierside					R@ =>" PIERSIDE"	
+	mount_pierside				R@ =>" PIERSIDE"	
 	10u.AlignmentStarCount 1-  R@ =>" ALGNSTRS"	
 	10u.ModelAlignmentInfo drop 18 + 7 >float
-	IF	fp~ ~FITS$ 					R@ =>" POLARERR" THEN
+	IF	fp~ ~FITS$ 				R@ =>" POLARERR" THEN
 	10u.DualAxisTrackingMode 
 	10u.OnOff?						R@ =>" DUALAXIS"	
 	R> drop
