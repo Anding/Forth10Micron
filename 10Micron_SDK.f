@@ -32,6 +32,10 @@ NEED finitefractions
 	10Micron.socket 0 = if CR ." Uninitialized TCP/IP socket to the mount" abort
 	then
 ;
+
+: 10u.disconnect ( --)
+\ VFX does not provide a function to close a socket
+;
 	
 : 10u.tell ( c-addr u --)
 \ pass a command string to the mount	
@@ -66,10 +70,8 @@ NEED finitefractions
 			then
 		then
 	repeat
-	drop 10Micron.buffer R>
-	dup 0= if 
-		2drop s" NO RESPONSE"  
-	else
+	drop 10Micron.buffer R>						  ( caddr bytes)
+	dup if 
 		10Micron.verbose if 2dup type CR then ( caddr u)
 	then
 ;

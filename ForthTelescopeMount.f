@@ -9,6 +9,7 @@
 ;
 
 : remove-mount ( --)
+	10u.disconnect
 ;
 
 : mount_status ( -- caddr u)
