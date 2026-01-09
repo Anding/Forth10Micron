@@ -83,7 +83,7 @@ s" :Glmt#" MAKE-COMMAND			10u.MeridianTrackingLimit
 s" :Glms#" MAKE-COMMAND			10u.MeridianSlewLimit
 
 \ Movement commands
-s" :STOP#" MAKE-QUIET-COMMAND 10u.Stop
+s" :STOP#" MAKE-QUIET-COMMAND   10u.Stop
 s" :KA#" MAKE-QUIET-COMMAND 	10u.Park
 s" :PO#" MAKE-QUIET-COMMAND 	10u.Unpark
 \ Park position is set with handbox or virtual keypad software
@@ -99,6 +99,9 @@ s" :RT2#" MAKE-QUIET-COMMAND 	10u.TrackSiderealRate
 s" :Slmt#" MAKE-DATA-COMMAND	10u.SetMeridianLimitTracking
 s" :Slms#" MAKE-DATA-COMMAND	10u.SetMeridianLimitSlews
 s" :FLIP#" MAKE-COMMAND			10u.FlipPierSide
+s" :newalign#" MAKE-COMMAND     10u.StartNewAlignment
+s" :newapt" MAKE-DATA-COMMAND   10u.AddAlignmentPoint
+s" :endalign#" MAKE-COMMAND     10u.EndAlignment
 
 \ Operating commands
 s" :U1#" MAKE-QUIET-COMMAND 			10u.HighPrecisionOn

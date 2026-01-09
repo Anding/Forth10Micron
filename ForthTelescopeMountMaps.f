@@ -4,75 +4,49 @@ NEED forth-map
 : add-mountFITS ( map --)
 \ add key value pairs for FITS observation parameters
 	>R
-	s"   "								R@ =>" #MOUNT"			\ a header to indicate the source of these FITS values
+	s"   "                          R@ =>" #MOUNT"			\ a header to indicate the source of these FITS values
 	mount_equatorial swap
-	~FITS$								R@ =>" OBJCTRA"
-	~FITS$								R@ =>" OBJCTDEC"
+	~FITS$                          R@ =>" OBJCTRA"
+	~FITS$                          R@ =>" OBJCTDEC"
 	mount_equatorial swap
-	~fp 15e0 f* 4 (f.)		R@ =>" RA"
-	~fp 4 (f.)						R@ =>" Dec"	
+	~fp 15e0 f* 4 (f.)              R@ =>" RA"
+	~fp 4 (f.)                      R@ =>" Dec"	
 	mount_horizon swap
-	~FITS$								R@ =>" OBJCTALT"
-	~FITS$								R@ =>" OBJCTAZ"	
+	~FITS$                          R@ =>" OBJCTALT"
+	~FITS$                          R@ =>" OBJCTAZ"	
 	mount_horizon swap
-	~fp 4 (f.)						R@ =>" CENTALT"
-	~fp 4 (f.)						R@ =>" CENTAZ"	
-	mount_hourAngle ~FITS$		R@ =>" OBJCTHA"
-	mount_siderealTime ~FITS$	R@ =>" SIDEREAL"
+	~fp 4 (f.)                      R@ =>" CENTALT"
+	~fp 4 (f.)                      R@ =>" CENTAZ"	
+	mount_hourAngle ~FITS$          R@ =>" OBJCTHA"
+	mount_siderealTime ~FITS$       R@ =>" SIDEREAL"
+	10u.LocalTime 	
+	>number~ ~FITS$                 R@ =>" MNTLOCT"		
 	mount_location
-	rot ~FITS$						R@ =>" SITELAT"
-	swap ~FITS$						R@ =>" SITELONG"
-	(.)										R@ =>" SITEELEV"
-	mount_name						R@ =>" MOUNT"
-	mount_SN							R@ =>" MOUNTSN"
-	mount_pierside				R@ =>" PIERSIDE"	
-	10u.AlignmentStarCount 1-  R@ =>" ALGNSTRS"	
-	10u.ModelAlignmentInfo drop 18 + 7 >float
-	IF	fp~ ~FITS$ 				R@ =>" POLARERR" THEN
+	rot ~FITS$                      R@ =>" SITELAT"
+	swap ~FITS$                     R@ =>" SITELONG"
+	(.)                             R@ =>" SITEELEV"
+	mount_pierside                  R@ =>" PIERSIDE"	
+	target_pierside                 R@ =>" TGTPSIDE"	
 	10u.DualAxisTrackingMode 
-	10u.OnOff?						R@ =>" DUALAXIS"	
-	R> drop
-;
-
-\ OBJCTALT – nominal altitude of center of image            
-\ OBJCTAZ – nominal azimuth of center of image
-\ OBJCTDEC – Declination of object being imaged, string format DD MM SS, if available. Note: this is an approximate field center value only.
-\ OBJCTHA – nominal hour angle of center of image
-\ OBJCTRA – Right Ascension of object being imaged, string format HH MM SS, if available. Note: this is an approximate field center value only.
-\ SITELAT – latitude of the imaging site in degrees, if available. Uses the same format as OBJECTDEC.
-\ SITELONG – longitude of the imaging site in degrees, if available. Uses the same format as OBJECTDEC.
-\ PIERSIDE – indicates side-of-pier status when connected to a German Equatorial mount.
-
-\ FITS keywords defined here for the ASI camera
-\ =============================================
-\ MOUNT		- mount name
-\ MOUNTSN	- mount serial number
-\ ALGNSTRS	- number of alignment stars
-\ PALARERR	- polar alignment error as deg mm ss
-\ DUALAXIS  - dual axis tracking mode on / off
-
-: add-mountDASH ( map --)
-\ additional key value pairs for dashboard telemetry
-	>R
-	R@ add-mountFITS
-	mount_status					R@ =>" STATUS"
-	10u.TrackingMode
-	10u.OnOff?						R@ =>" TRACKING"
+	10u.OnOff?                      R@ =>" DUALAXIS"	
+	10u.OnOff?                      R@ =>" TRACKING"
 	10u.RefractionCorrectionMode
-	10u.OnOff?						R@ =>" REFRACTN"
+	10u.OnOff?                      R@ =>" REFRACTN"
 	10u.SpeedCorrectionMode
-	10u.OnOff?						R@ =>" SPDCORCT"
-	target_pierside				R@ =>" TGTPSIDE"
+	10u.OnOff?                      R@ =>" SPDCORCT"
 	10u.UnattendedFlipMode
-	10u.OnOff?						R@ =>" UNATFLIP"
+	10u.OnOff?                      R@ =>" UNATFLIP"
 	mount_timeToTrackingEnd
-	~FITS$							R@ =>" TRACKEND"
+	~FITS$                          R@ =>" TRACKEND"
 	10u.MeridianTrackingLimit
-	10u.>num (.)					R@ =>" TRKLIMIT"
+	10u.>num (.)                    R@ =>" TRKLIMIT"
 	10u.MeridianSlewLimit
-	10u.>num (.)					R@ =>" SLWLIMIT"
-	10u.LocalTime 
-	>number~ ~FITS$						R@ =>" LOCALTME"
+	10u.>num (.)                    R@ =>" SLWLIMIT"
+	10u.AlignmentStarCount 1-       R@ =>" ALGNSTRS"	
+	10u.ModelAlignmentInfo drop 18 + 7 >float
+	IF	fp~ ~FITS$                  R@ =>" POLARERR" THEN	
+	mount_status                    R@ =>" STATUS"
+	10u.TrackingMode
+	mount_SN                        R@ =>" MOUNTSN"
 	R> drop
 ;
-	
