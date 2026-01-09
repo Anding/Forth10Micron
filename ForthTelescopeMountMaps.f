@@ -29,6 +29,7 @@ NEED forth-map
 	target_pierside                 R@ =>" TGTPSIDE"	
 	10u.DualAxisTrackingMode 
 	10u.OnOff?                      R@ =>" DUALAXIS"	
+	10u.TrackingMode	
 	10u.OnOff?                      R@ =>" TRACKING"
 	10u.RefractionCorrectionMode
 	10u.OnOff?                      R@ =>" REFRACTN"
@@ -46,7 +47,6 @@ NEED forth-map
 	10u.ModelAlignmentInfo drop 18 + 7 >float
 	IF	fp~ ~FITS$                  R@ =>" POLARERR" THEN	
 	mount_status                    R@ =>" STATUS"
-	10u.TrackingMode
 	mount_SN                        R@ =>" MOUNTSN"
 	R> drop
 ;

@@ -106,8 +106,8 @@
 	\ place in range -12 00 00 - 11 59 59
 ;
 
-: mount_siderealTime ( --T)
-\ return the sidereal time
+: mount_siderealTime ( -- T)
+\ return the sidereal time in finite fraction format
 	10u.SiderealTime >number~
 ;
 
