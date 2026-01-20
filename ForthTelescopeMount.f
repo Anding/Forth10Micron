@@ -139,3 +139,24 @@
 	." Mount Name = " mount_name type
 	." ; Status = " mount_status type
 ;
+
+\ user lexicon
+
+: unpark ( --)
+	10u.unpark
+	10u.StartTracking
+;
+
+: park
+	10u.park
+;
+
+: goto ( RA Dec --)
+\ slew the mount to an equatorial coordinate
+	->mount_equatorial ( RA DEC --)
+;
+
+: gotoAltAz ( Alt Az --)
+\ slew the mount to an equatorial coordinate
+	->mount_horizon ( RA DEC --)
+;
