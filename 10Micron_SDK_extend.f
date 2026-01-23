@@ -76,10 +76,10 @@
 
 : 10u.?abort ( caddr u --)
 \ do-or-die error handler	
-	flushKeys	
-	drop c@						\ the first character in the buffer
-	'1' = IF EXIT THEN		\ '1' is the valid return condition
-	." Mount responds invalid"
+	over c@					    \ the first character in the buffer
+	'1' = IF 2drop EXIT THEN    \ '1' is the valid return condition
+	cr s" Mount responds invalid" .>E
+	1- swap 1+ swap cr .>E cr
 	abort 
 ;
 

@@ -1,8 +1,10 @@
 \ Code for controlling the 10Micron mount
-include %idir%\..\ForthBase\libraries\libraries.f
 NEED forthbase
 NEED network
 NEED finitefractions
+NEED forthVT100
+
+s" " $value 10u.str1
 
 0 value 10Micron.verbose
 \ 10u.ask will report results to the terminal
@@ -19,17 +21,16 @@ NEED finitefractions
 : 10u.connect ( -- )
 \ try to connect to the 10 Micron mount
 	10Micron.IP 0 3490 TCPConnect
-	?dup 0 = if 
-		dup -> 10Micron.socket
-		." 10Micron connected on socket " .
+	?dup 0= if 
+		-> 10Micron.socket
 	else
-		." 10Micron connection failed with WinSock error number " . abort
+		s" 10Micron connection failed with WinSock error number " $-> 10u.str1 (.) $+> 10u.str1 10u.str1 .>E abort
 	then
 ;
 
 : 10u.checksocket ( --)
 \ check for an uninitialized socket
-	10Micron.socket 0 = if CR ." Uninitialized TCP/IP socket to the mount" abort
+	10Micron.socket 0 = if CR s" Uninitialized TCP/IP socket to the mount" .>E abort
 	then
 ;
 
@@ -72,6 +73,6 @@ NEED finitefractions
 	repeat
 	drop 10Micron.buffer R>						  ( caddr bytes)
 	dup if 
-		10Micron.verbose if 2dup type CR then ( caddr u)
+		10Micron.verbose if 2dup .>D then ( caddr u)
 	then
 ;

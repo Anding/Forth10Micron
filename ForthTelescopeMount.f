@@ -1,3 +1,13 @@
+: mount_name ( -- caddr u)
+\ return the name of the mount
+	10u.MountModel 1-
+;
+
+: mount_status ( -- caddr u)
+\ return the status of the mount
+	10u.status 10u.>num 10u.statuses
+;
+
 : add-mount ( --)
 	flushkeys
 	10u.connect
@@ -5,14 +15,11 @@
 	10u.DualAxisTrackingOn 2drop
 	10u.WeatherUpdatesOn 2drop
 	10u.TrackSiderealRate
+	cr mount_name $-> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 10u.str1 .> cr
 ;
 
 : remove-mount ( --)
 	10u.disconnect
-;
-
-: mount_status ( -- caddr u)
-	10u.status 10u.>num 10u.statuses
 ;
 
 : mount_pierside ( -- caddr u)
@@ -62,13 +69,9 @@
 ;
 
 : ->mount_equatorial ( RA DEC --)
-\ slew to RA DEC provied in single integer finite fraction format and start tracking
+\ set the mount target RA DEC are provided in single integer finite fraction format
 	~DEC$ 10u.SetTargetDec 10u.?abort
 	~RA$ 10u.SetTargetRA 10u.?abort
-	10u.UnPark
-	10u.SlewToEquatorialTarget ( caddr u)
-	over c@ '0' = IF 2drop wait-mount EXIT THEN		\ '0' is the no-error condition
-	type CR abort
 ;
 	
 : mount_horizon ( -- ALT AZ)
@@ -81,10 +84,6 @@
 \ slew to ALT AZ provied in single integer finite fraction format and start tracking
 	~AZ$ 10u.SetTargetAz 10u.?abort
 	~ALT$ 10u.SetTargetAlt 10u.?abort
-	10u.UnPark
-	10u.SlewToEquatorialTarget ( caddr u)
-	over c@ '0' = IF 2drop wait-mount EXIT THEN		\ '0' is the no-error condition
-	type CR abort
 ;
 
 : mount_location ( -- LAT LONG ELEV)
@@ -120,11 +119,6 @@
 	10u.Stop
 ;
 
-: mount_name ( -- caddr u)
-\ return the name of the mount
-	10u.MountModel 1-
-;
-
 : mount_SN ( -- caddr u)
 \ return the S/N of the mount as a string
 	10u.SerialNumber 1-
@@ -145,18 +139,50 @@
 : unpark ( --)
 	10u.unpark
 	10u.StartTracking
+	cr mount_status .> cr
 ;
 
 : park
 	10u.park
+	wait-mount
+	cr mount_status .> cr
+	
 ;
 
 : goto ( RA Dec --)
 \ slew the mount to an equatorial coordinate
-	->mount_equatorial ( RA DEC --)
+    ->mount_equatorial ( RA DEC --)
+	10u.UnPark
+	10u.SlewToEquatorialTarget ( caddr u)
+	over c@ '0' <> IF CR 2 - swap 1+ swap .>E CR abort THEN
+	2drop cr
+	begin
+	    mount_busy       ( flag)
+	    100 ms
+	    mount_equatorial ( flag RA DEC) swap	
+	    s" RA " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Dec " $+> 10u.str1 <.Dec> $+> 10u.str1 
+        10u.str1 .>	
+	while
+		400 ms
+	repeat
+	cr mount_status .> cr	
 ;
 
 : gotoAltAz ( Alt Az --)
-\ slew the mount to an equatorial coordinate
+\ slew the mount to a horizon coordinate, then continue tracking
 	->mount_horizon ( RA DEC --)
+	10u.UnPark
+	10u.SlewToEquatorialTarget ( caddr u)
+	over c@ '0' <> IF CR 2 - swap 1+ swap .>E CR abort THEN
+	2drop cr
+	begin
+	    mount_busy    ( flag)
+	    100 ms
+	    mount_horizon ( flag Alt Az) swap	
+	    s" Alt " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Az " $+> 10u.str1 <.RA> $+> 10u.str1 
+        10u.str1 .>	
+	while
+		400 ms
+	repeat
+	cr mount_status .> cr
 ;
