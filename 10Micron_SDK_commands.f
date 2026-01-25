@@ -32,9 +32,9 @@ s" :Gr#"  MAKE-COMMAND 			10u.TargetRA
 s" :GD#" MAKE-COMMAND			10u.MountDec
 s" :Gd#" MAKE-COMMAND			10u.TargetDec
 s" :Gev#" MAKE-COMMAND			10u.SiteElevation
-s" :GG#"	MAKE-COMMAND			10u.LocalOffsetToUTC ( add to local time)
-s" :Gg#"	MAKE-COMMAND			10u.SiteLongitude
-s" :Gt#"	MAKE-COMMAND			10u.SiteLatitude
+s" :GG#"  MAKE-COMMAND		    10u.LocalOffsetToUTC ( add to local time)
+s" :Gg#"	MAKE-COMMAND		10u.SiteLongitude
+s" :Gt#"	MAKE-COMMAND		10u.SiteLatitude
 s" :Gmte#" MAKE-COMMAND			10u.TimeToTrackingEnd
 
 \ Get date time information

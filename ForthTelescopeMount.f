@@ -1,3 +1,5 @@
+need astrocalc
+
 : mount_name ( -- caddr u)
 \ return the name of the mount
 	10u.MountModel 1-
@@ -26,14 +28,20 @@
 	10u.MountPierSide 1-
 ;
 
-: target_pierside ( -- caddr u)
-	10u.TargetPierSide 10u.>num
-	CASE
-		2 OF s" West" ENDOF
-		3 OF s" East" ENDOF
-		s" n/a" rot
-	ENDCASE		
-;
+\ : target_pierside ( -- caddr u)
+\ 	10u.TargetPierSide 10u.>num
+\ 	CASE
+\ 		2 OF s" West" ENDOF
+\ 		3 OF s" East" ENDOF
+\ 		s" n/a" rot
+\ 	ENDCASE		
+\ ;
+\ testing suggestings this command is always returning "West" regardless of whether the target is to the east or west of the meridian
+\ meridian flip strategy:
+\ if mount_pierside = West then
+\ if sideral time > mount ra (taking into account 00 rollover) then
+\ better to compute the hour angle as a separate function with FITS key and use that
+\ 10u.flippierside expect "1" for success and "0" for do nothing
 
 : mount_busy ( -- flag)
 	10u.status 10u.>num
@@ -62,14 +70,18 @@
 	repeat
 ;
 
-: mount_equatorial ( -- RA DEC)
+: mount_equatorial ( -- RA_J2000 DEC_J2000)
 \ return the mount RA and DEC in single integer finite fraction format
 	10u.MountRA >number~
 	10u.MountDEC >number~
+	10u.utcdatetime >number~~~  ( dd mm yy) 2000 + ( yyyy mm dd) -rot swap ( dd mm yyyy) ~ ( RA_JNOW Dec_JNOW YYMMDD)
+	J2000
 ;
 
-: ->mount_equatorial ( RA DEC --)
+: ->mount_equatorial ( RA_J2000 DEC_J2000 --)
 \ set the mount target RA DEC are provided in single integer finite fraction format
+    10u.utcdatetime >number~~~  ( yy mm dd) 2000 + ( yyyy mm dd) -rot swap ( dd mm yyyy) ~ ( RA_J2000 Dec_J2000 YYMMDD)
+    JNOW ( RA_JNOW Dec_JNOW)
 	~DEC$ 10u.SetTargetDec 10u.?abort
 	~RA$ 10u.SetTargetRA 10u.?abort
 ;
@@ -158,13 +170,11 @@
 	2drop cr
 	begin
 	    mount_busy       ( flag)
-	    100 ms
+	    500 ms
 	    mount_equatorial ( flag RA DEC) swap	
 	    s" RA " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Dec " $+> 10u.str1 <.Dec> $+> 10u.str1 
         10u.str1 .>	
-	while
-		400 ms
-	repeat
+    0= until
 	cr mount_status .> cr	
 ;
 
@@ -177,12 +187,10 @@
 	2drop cr
 	begin
 	    mount_busy    ( flag)
-	    100 ms
+	    500 ms
 	    mount_horizon ( flag Alt Az) swap	
 	    s" Alt " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Az " $+> 10u.str1 <.RA> $+> 10u.str1 
         10u.str1 .>	
-	while
-		400 ms
-	repeat
+	0= until
 	cr mount_status .> cr
 ;
