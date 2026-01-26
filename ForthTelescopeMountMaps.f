@@ -26,7 +26,6 @@ NEED forth-map
 	swap ~FITS$                     R@ =>" SITELONG"
 	(.)                             R@ =>" SITEELEV"
 	mount_pierside                  R@ =>" PIERSIDE"	
-	target_pierside                 R@ =>" TGTPSIDE"	
 	10u.DualAxisTrackingMode 
 	10u.OnOff?                      R@ =>" DUALAXIS"	
 	10u.TrackingMode	
