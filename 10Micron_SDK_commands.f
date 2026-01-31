@@ -63,7 +63,7 @@ s" :Gstat#" MAKE-COMMAND 		10u.Status
 ( 99  error	)	
 	END-ENUMS
 	
-s" :GVP#" MAKE-COMMAND			10u.MountModel
+s" :GVP#" MAKE-COMMAND			10u.MountModel      \ e.g. "10micron GM1000HPS#"
 s" :GIP#" MAKE-COMMAND			10u.IPaddress
 s" :GMAC#" MAKE-COMMAND			10u.MACaddress
 s" :GVN#" MAKE-COMMAND			10u.FirmwareVersion
@@ -78,6 +78,7 @@ s" :GTsid#" MAKE-COMMAND		10u.TargetPierSide
 \ 0 no target defined, or the target object is located in a position where it is not possible to go
 \ 2 the target is located in a position where the mount would slew the telescope to the west side so that after the slew the ":pS#" command would return "West#".
 \ 3 the target is located in a position where the mount would slew the telescope to the east side so that after the slew the ":pS#" command would return "East#".
+\ testing suggestings this command is always returning "West" regardless of whether the target is to the east or west of the meridian
 s" :Guaf#" MAKE-COMMAND			10u.UnattendedFlipMode
 s" :Glmt#" MAKE-COMMAND			10u.MeridianTrackingLimit
 s" :Glms#" MAKE-COMMAND			10u.MeridianSlewLimit

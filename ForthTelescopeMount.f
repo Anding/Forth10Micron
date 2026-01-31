@@ -1,5 +1,16 @@
 need astrocalc
 
+s" " $value 10u.ModelAlignmentInfoString
+: 10u.RAaxisAz      10u.ModelAlignmentInfoString drop 8 ;
+: 10u.RAaxisAlt     10u.ModelAlignmentInfoString drop 9 + 8 ;
+: 10u.PolarError    10u.ModelAlignmentInfoString drop 18 + 7 ;
+: 10u.RAaxisPA      10u.ModelAlignmentInfoString drop 26 + 7 ;
+: 10u.OrthoError    10u.ModelAlignmentInfoString drop 34 + 8 ;
+: 10u.TurnAzLeft    10u.ModelAlignmentInfoString drop 43 + 6 ;
+: 10u.TurnAltDown   10u.ModelAlignmentInfoString drop 50 + 6 ;
+: 10u.NumOfTerms    10u.ModelAlignmentInfoString drop 57 + 2 ;
+: 10u.RMSerror      10u.ModelAlignmentInfoString drop 60 + 7 ;
+
 : mount_name ( -- caddr u)
 \ return the name of the mount
 	10u.MountModel 1-
@@ -27,21 +38,6 @@ need astrocalc
 : mount_pierside ( -- caddr u)
 	10u.MountPierSide 1-
 ;
-
-\ : target_pierside ( -- caddr u)
-\ 	10u.TargetPierSide 10u.>num
-\ 	CASE
-\ 		2 OF s" West" ENDOF
-\ 		3 OF s" East" ENDOF
-\ 		s" n/a" rot
-\ 	ENDCASE		
-\ ;
-\ testing suggestings this command is always returning "West" regardless of whether the target is to the east or west of the meridian
-\ meridian flip strategy:
-\ if mount_pierside = West then
-\ if sideral time > mount ra (taking into account 00 rollover) then
-\ better to compute the hour angle as a separate function with FITS key and use that
-\ 10u.flippierside expect "1" for success and "0" for do nothing
 
 : mount_busy ( -- flag)
 	10u.status 10u.>num
@@ -106,6 +102,11 @@ need astrocalc
 	10u.SiteElevation 1- >float if fr>s else 0 then
 ;	
 
+: mount_siderealTime ( -- T)
+\ return the local sidereal time in finite fraction format
+	10u.SiderealTime >number~
+;
+
 : mount_hourAngle ( -- HA)
 \ return the Hour Angle of the mount in the range -11 59 59 to 12 00 00 in single interger finite fraction format
 \ negative means the mount is pointing is A.M., positive P.M.
@@ -115,11 +116,6 @@ need astrocalc
 	dup  43200 >= IF 86400 ( 24 hours in seconds) - THEN
 	dup -43200 <  IF 86400 + THEN	
 	\ place in range -12 00 00 - 11 59 59
-;
-
-: mount_siderealTime ( -- T)
-\ return the sidereal time in finite fraction format
-	10u.SiderealTime >number~
 ;
 
 : mount_timeToTrackingEnd ( -- T)
@@ -134,6 +130,10 @@ need astrocalc
 : mount_SN ( -- caddr u)
 \ return the S/N of the mount as a string
 	10u.SerialNumber 1-
+;
+
+: mount_alignment ( --)
+    10u.ModelAlignmentInfo $-> 10u.ModelAlignmentInfoString
 ;
 
 \ convenience functions
@@ -158,7 +158,6 @@ need astrocalc
 	10u.park
 	wait-mount
 	cr mount_status .> cr
-	
 ;
 
 : goto ( RA Dec --)
@@ -194,3 +193,62 @@ need astrocalc
 	0= until
 	cr mount_status .> cr
 ;
+
+: need-flip? ( -- flag)
+\ return true if the mount should make a meridian flip to continue tracking
+    mount_pierside drop c@ 'W' = 
+    mount_hourAngle 0 >=
+    and if -1 else 0 then
+;
+
+: meridian-flip ( --)
+    10u.FlipPierSide ( caddr u)
+    drop c@ '0' = if 
+        s" No meridian flip required" .> cr
+    else
+        s" Meridian flip in progress..." .> cr
+	    begin
+	        mount_busy    ( flag)
+	        500 ms
+	    0= until
+	then
+	mount_status .> cr  
+;
+
+: add-alignment-point ( caddr u --)
+    2dup 10u.AddAlignmentPoint
+    drop c@ 'E' = if 
+        s" Invalid point  " $-> 10u.str1 $+> 10u.str1 10u.str1 .>E cr
+     else 2drop
+     then
+;
+
+: new-alignment-model ( caddr u -- ior)
+\ create a new alignment model
+\ caddr u is a forth file with formatted add-alignment-point commands
+    2dup FileExists? 
+    0= if s" No such file" .>E cr abort then
+    10u.StartNewAlignment 2drop
+    ( addr u ) included
+    10u.EndAlignment
+    drop c@ 'E' = if s" Mount failed to compute a model" .>E cr abort then
+    mount_alignment
+    s" New alignment model computed" .> cr
+;
+
+: .alignment ( --)
+    cr 
+    s" Align stars  " $-> 10u.str1 10u.AlignmentStarCount 1- $+> 10u.str1 10u.str1 .> cr
+    mount_alignment
+    s" RA Axis Az   " $-> 10u.str1 10u.RAaxisAz      $+> 10u.str1 10u.str1 .> cr
+    s" RA Axis Alt  " $-> 10u.str1 10u.RAaxisAlt     $+> 10u.str1 10u.str1 .> cr
+    s" Polar Error  " $-> 10u.str1 10u.PolarError    $+> 10u.str1 10u.str1 .> cr
+    s" RA Axis PA   " $-> 10u.str1 10u.RAaxisPA      $+> 10u.str1 10u.str1 .> cr
+    s" Ortho Error  " $-> 10u.str1 10u.OrthoError    $+> 10u.str1 10u.str1 .> cr
+    s" Az go left   " $-> 10u.str1 10u.TurnAzLeft    $+> 10u.str1 10u.str1 .> cr
+    s" Alt go down  " $-> 10u.str1 10u.TurnAltDown   $+> 10u.str1 10u.str1 .> cr
+    s" No. terms    " $-> 10u.str1 10u.NumOfTerms    $+> 10u.str1 10u.str1 .> cr
+    s" RMS Error    " $-> 10u.str1 10u.RMSerror      $+> 10u.str1 10u.str1 .> cr 
+;     
+    
+

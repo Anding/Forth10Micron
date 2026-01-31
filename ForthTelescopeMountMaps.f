@@ -16,9 +16,9 @@ NEED forth-map
 	~FITS$                          R@ =>" OBJCTAZ"	
 	mount_horizon swap
 	~fp 4 (f.)                      R@ =>" CENTALT"
-	~fp 4 (f.)                      R@ =>" CENTAZ"	
+	~fp 4 (f.)                      R@ =>" CENTAZ"
+	mount_siderealTime ~FITS$       R@ =>" SIDEREAL"		
 	mount_hourAngle ~FITS$          R@ =>" OBJCTHA"
-	mount_siderealTime ~FITS$       R@ =>" SIDEREAL"
 	10u.LocalTime 	
 	>number~ ~FITS$                 R@ =>" MNTLOCT"		
 	mount_location
@@ -42,9 +42,10 @@ NEED forth-map
 	10u.>num (.)                    R@ =>" TRKLIMIT"
 	10u.MeridianSlewLimit
 	10u.>num (.)                    R@ =>" SLWLIMIT"
-	10u.AlignmentStarCount 1-       R@ =>" ALGNSTRS"	
-	10u.ModelAlignmentInfo drop 18 + 7 >float
-	IF	fp~ ~FITS$                  R@ =>" POLARERR" THEN	
+	10u.AlignmentStarCount 1-       R@ =>" ALGNSTRS"
+	mount_alignment	
+	10u.PolarError                  R@ =>" POLARERR"
+	10u.OrthoError                  R@ =>" ORTHOERR"	
 	mount_status                    R@ =>" STATUS"
 	mount_SN                        R@ =>" MOUNTSN"
 	R> drop
