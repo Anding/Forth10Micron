@@ -1,6 +1,8 @@
 need astrocalc
 
 s" " $value 10u.ModelAlignmentInfoString
+\ 000.4126,+22.3672,00.3882,280.64,E,+00.34,+00.03,E,E# 
+\ need to split on the commas!
 : 10u.RAaxisAz      10u.ModelAlignmentInfoString drop 8 ;
 : 10u.RAaxisAlt     10u.ModelAlignmentInfoString drop 9 + 8 ;
 : 10u.PolarError    10u.ModelAlignmentInfoString drop 18 + 7 ;
