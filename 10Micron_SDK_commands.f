@@ -39,14 +39,14 @@ s" :Gmte#" MAKE-COMMAND			10u.TimeToTrackingEnd
 
 \ Get date time information
 s" :GC#" MAKE-COMMAND			10u.LocalDate
-s" :GL#"	MAKE-COMMAND			10u.LocalTime
+s" :GL#"	MAKE-COMMAND	    10u.LocalTime
 s" :GLDT#"	MAKE-COMMAND		10u.LocalDateTime
 s" :GUDT#"	MAKE-COMMAND		10u.UTCDateTime
-s" :GS#"	MAKE-COMMAND			10u.SiderealTime
+s" :GS#"	MAKE-COMMAND        10u.SiderealTime
 
 \ Get operating information
-s" :Gstat#" MAKE-COMMAND 		10u.Status
-	BEGIN-ENUMS 					10u.Statuses
+s" :Gstat#" MAKE-COMMAND        10u.Status
+	BEGIN-ENUMS                 10u.Statuses
 (  0)	+" Tracking"
 		+" Stopped by command"
 		+" Slewing to park"
@@ -100,21 +100,26 @@ s" :RT2#" MAKE-QUIET-COMMAND 	10u.TrackSiderealRate
 s" :Slmt#" MAKE-DATA-COMMAND	10u.SetMeridianLimitTracking
 s" :Slms#" MAKE-DATA-COMMAND	10u.SetMeridianLimitSlews
 s" :FLIP#" MAKE-COMMAND			10u.FlipPierSide
+
+\ Model commands
 s" :newalign#" MAKE-COMMAND     10u.StartNewAlignment
 s" :newapt" MAKE-DATA-COMMAND   10u.AddAlignmentPoint
-s" :endalign#" MAKE-COMMAND     10u.EndAlignment
+s" :endalig#" MAKE-COMMAND      10u.EndAlignment
+s" :delalig#" MAKE-COMMAND      10u.DeleteAlignment
+s" :modelld0" MAKE-DATA-COMMAND 10u.LoadAlignment
+s" :modelsv0" MAKE-DATA-COMMAND 10u.SaveAlignment
 
 \ Operating commands
-s" :U1#" MAKE-QUIET-COMMAND 			10u.HighPrecisionOn
+s" :U1#" MAKE-QUIET-COMMAND         10u.HighPrecisionOn
 s" :SWOL0#" MAKE-QUIET-COMMAND 		10u.WakeOnLANoff
 s" :SWOL1#" MAKE-QUIET-COMMAND 		10u.WakeOnLANon
-s" :Sdat0#" MAKE-COMMAND 		10u.DualAxisTrackingOff
-s" :Sdat1#" MAKE-COMMAND 		10u.DualAxisTrackingOn
-s" :WSS0#" MAKE-COMMAND			10u.WeatherUpdatesOff
-s" :WSS2#" MAKE-COMMAND 		10u.WeatherUpdatesOn
+s" :Sdat0#" MAKE-COMMAND            10u.DualAxisTrackingOff
+s" :Sdat1#" MAKE-COMMAND            10u.DualAxisTrackingOn
+s" :WSS0#" MAKE-COMMAND             10u.WeatherUpdatesOff
+s" :WSS2#" MAKE-COMMAND             10u.WeatherUpdatesOn
 s" :Suaf0#" MAKE-QUIET-COMMAND		10u.UnattendedFlipOff
 s" :Suaf1#" MAKE-QUIET-COMMAND		10u.UnattendedFlipOn
-s" :SREF0#" MAKE-COMMAND 10u.RefractionCorrectionOff
-s" :SREF1#" MAKE-COMMAND 10u.RefractionCorrectionOn
-s" :USEROK#" MAKE-QUIET-COMMAND 		10u.UserOK
+s" :SREF0#" MAKE-COMMAND            10u.RefractionCorrectionOff
+s" :SREF1#" MAKE-COMMAND            10u.RefractionCorrectionOn
+s" :USEROK#" MAKE-QUIET-COMMAND 	10u.UserOK
 s" :shutdown#" MAKE-QUIET-COMMAND 	10u.shutdown

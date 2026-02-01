@@ -215,6 +215,21 @@ s" " $value 10u.ModelAlignmentInfoString
 	mount_status .> cr  
 ;
 
+: delete-alignment-model
+    10u.DeleteAlignment
+    2drop
+;
+
+: save-alignment-model ( caddr u --)
+    10u.SaveAlignment
+    2drop
+;
+
+: load-alignment-model ( caddr u --)
+    10u.LoadAlignment
+    2drop
+;
+
 : add-alignment-point ( caddr u --)
     2dup 10u.AddAlignmentPoint
     drop c@ 'E' = if 
@@ -227,13 +242,13 @@ s" " $value 10u.ModelAlignmentInfoString
 \ create a new alignment model
 \ caddr u is a forth file with formatted add-alignment-point commands
     2dup FileExists? 
-    0= if s" No such file" .>E cr abort then
+    0= if s" No such file" .>E cr -1 exit then
     10u.StartNewAlignment 2drop
     ( addr u ) included
     10u.EndAlignment
-    drop c@ 'E' = if s" Mount failed to compute a model" .>E cr abort then
+    drop c@ 'E' = if s" Mount failed to compute a model" .>E cr -1 exit then
     mount_alignment
-    s" New alignment model computed" .> cr
+    s" New alignment model computed" .> cr 0
 ;
 
 : .alignment ( --)
