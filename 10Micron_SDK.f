@@ -50,17 +50,17 @@ s" " $value 10u.str1
 : 10u.ask ( -- c-addr u)
 \ get a response from the mount
 	10u.checksocket
-	0 >R 5													( tries R:bytes)
+	0 >R 100													( tries R:bytes)
 	begin
 		1- dup 0 >=
 	while
-		200 ms
+		100 ms
 		10Micron.socket pollsock									( tries len | tries SOCKET_ERROR)
 		dup SOCKET_ERROR = if 
 			drop ." Failed to poll the socket " CR
 		else
 			0= if
-				." 0 bytes available at the socket" CR
+				\ s" 0 bytes available at the socket" .>D
 			else
 				10Micron.buffer 256 10Micron.socket readsock 			( tries len 0 | tries error SOCKET_ERROR)
 				SOCKET_ERROR = if							( tries ior)

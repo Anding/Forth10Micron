@@ -102,8 +102,8 @@ s" :Slms#" MAKE-DATA-COMMAND	10u.SetMeridianLimitSlews
 s" :FLIP#" MAKE-COMMAND			10u.FlipPierSide
 
 \ Model commands
-s" :newalign#" MAKE-COMMAND     10u.StartNewAlignment
-s" :newapt" MAKE-DATA-COMMAND   10u.AddAlignmentPoint
+s" :newalig#" MAKE-COMMAND      10u.StartNewAlignment
+s" :newalpt" MAKE-DATA-COMMAND  10u.AddAlignmentPoint
 s" :endalig#" MAKE-COMMAND      10u.EndAlignment
 s" :delalig#" MAKE-COMMAND      10u.DeleteAlignment
 s" :modelld0" MAKE-DATA-COMMAND 10u.LoadAlignment

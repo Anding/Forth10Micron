@@ -153,13 +153,13 @@ s" " $value 10u.ModelAlignmentInfoString
 : unpark ( --)
 	10u.unpark
 	10u.StartTracking
-	cr mount_status .> cr
+	mount_status .>
 ;
 
 : park
 	10u.park
 	wait-mount
-	cr mount_status .> cr
+	mount_status .>
 ;
 
 : goto ( RA Dec --)
@@ -167,8 +167,8 @@ s" " $value 10u.ModelAlignmentInfoString
     ->mount_equatorial ( RA DEC --)
 	10u.UnPark
 	10u.SlewToEquatorialTarget ( caddr u)
-	over c@ '0' <> IF CR 2 - swap 1+ swap .>E CR abort THEN
-	2drop cr
+	over c@ '0' <> IF 2 - swap 1+ swap .>E abort THEN
+	2drop
 	begin
 	    mount_busy       ( flag)
 	    500 ms
@@ -176,7 +176,7 @@ s" " $value 10u.ModelAlignmentInfoString
 	    s" RA " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Dec " $+> 10u.str1 <.Dec> $+> 10u.str1 
         10u.str1 .>	
     0= until
-	cr mount_status .> cr	
+	cr mount_status .>
 ;
 
 : gotoAltAz ( Alt Az --)
@@ -184,8 +184,8 @@ s" " $value 10u.ModelAlignmentInfoString
 	->mount_horizon ( RA DEC --)
 	10u.UnPark
 	10u.SlewToEquatorialTarget ( caddr u)
-	over c@ '0' <> IF CR 2 - swap 1+ swap .>E CR abort THEN
-	2drop cr
+	over c@ '0' <> IF 2 - swap 1+ swap .>E abort THEN
+	2drop 
 	begin
 	    mount_busy    ( flag)
 	    500 ms
@@ -193,7 +193,7 @@ s" " $value 10u.ModelAlignmentInfoString
 	    s" Alt " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Az " $+> 10u.str1 <.RA> $+> 10u.str1 
         10u.str1 .>	
 	0= until
-	cr mount_status .> cr
+	cr mount_status .>
 ;
 
 : need-flip? ( -- flag)
@@ -219,38 +219,39 @@ s" " $value 10u.ModelAlignmentInfoString
 
 : delete-alignment-model
     10u.DeleteAlignment
-    2drop
+    .>D
 ;
 
 : save-alignment-model ( caddr u --)
     10u.SaveAlignment
-    2drop
+    .>D
 ;
 
 : load-alignment-model ( caddr u --)
     10u.LoadAlignment
-    2drop
+    .>D
 ;
 
 : add-alignment-point ( caddr u --)
     2dup 10u.AddAlignmentPoint
-    drop c@ 'E' = if 
-        s" Invalid point  " $-> 10u.str1 $+> 10u.str1 10u.str1 .>E cr
-     else 2drop
+    over c@ 'E' = if 
+        2drop s" Invalid point  " $-> 10u.str1 $+> 10u.str1 10u.str1 .>E
+     else .>D 2drop
      then
 ;
 
-: new-alignment-model ( caddr u -- ior)
+: new-alignment-model ( caddr u --)
 \ create a new alignment model
 \ caddr u is a forth file with formatted add-alignment-point commands
     2dup FileExists? 
-    0= if s" No such file" .>E cr -1 exit then
-    10u.StartNewAlignment 2drop
+    0= if s" No such file" .>E -1 exit then
+    10u.StartNewAlignment .>D
     ( addr u ) included
     10u.EndAlignment
-    drop c@ 'E' = if s" Mount failed to compute a model" .>E cr -1 exit then
+    over c@ 'E' = if 2drop s" Mount failed to compute a model" .>E exit then
+    .>D
     mount_alignment
-    s" New alignment model computed" .> cr 0
+    s" New alignment model computed" .>
 ;
 
 : .alignment ( --)
