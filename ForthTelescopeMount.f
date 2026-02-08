@@ -169,14 +169,13 @@ s" " $value 10u.ModelAlignmentInfoString
 	10u.SlewToEquatorialTarget ( caddr u)
 	over c@ '0' <> IF 2 - swap 1+ swap .>E abort THEN
 	2drop
-	begin
+	cr begin
 	    mount_busy       ( flag)
 	    500 ms
 	    mount_equatorial ( flag RA DEC) swap	
-	    s" RA " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Dec " $+> 10u.str1 <.Dec> $+> 10u.str1 
+	    s" RA " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Dec " $+> 10u.str1 <.Dec> $+> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 
         10u.str1 .>	
     0= until
-	cr mount_status .>
 ;
 
 : gotoAltAz ( Alt Az --)
@@ -186,14 +185,13 @@ s" " $value 10u.ModelAlignmentInfoString
 	10u.SlewToEquatorialTarget ( caddr u)
 	over c@ '0' <> IF 2 - swap 1+ swap .>E abort THEN
 	2drop 
-	begin
+	cr begin
 	    mount_busy    ( flag)
 	    500 ms
 	    mount_horizon ( flag Alt Az) swap	
-	    s" Alt " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Az " $+> 10u.str1 <.RA> $+> 10u.str1 
+	    s" Alt " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Az " $+> 10u.str1 <.RA> $+> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 
         10u.str1 .>	
 	0= until
-	cr mount_status .>
 ;
 
 : need-flip? ( -- flag)
