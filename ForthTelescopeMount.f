@@ -1,18 +1,5 @@
 need astrocalc
 
-s" " $value 10u.ModelAlignmentInfoString
-\ 000.4126,+22.3672,00.3882,280.64,E,+00.34,+00.03,E,E# 
-\ need to split on the commas!
-: 10u.RAaxisAz      10u.ModelAlignmentInfoString drop 8 ;
-: 10u.RAaxisAlt     10u.ModelAlignmentInfoString drop 9 + 8 ;
-: 10u.PolarError    10u.ModelAlignmentInfoString drop 18 + 7 ;
-: 10u.RAaxisPA      10u.ModelAlignmentInfoString drop 26 + 7 ;
-: 10u.OrthoError    10u.ModelAlignmentInfoString drop 34 + 8 ;
-: 10u.TurnAzLeft    10u.ModelAlignmentInfoString drop 43 + 6 ;
-: 10u.TurnAltDown   10u.ModelAlignmentInfoString drop 50 + 6 ;
-: 10u.NumOfTerms    10u.ModelAlignmentInfoString drop 57 + 2 ;
-: 10u.RMSerror      10u.ModelAlignmentInfoString drop 60 + 7 ;
-
 : mount_name ( -- caddr u)
 \ return the name of the mount
 	10u.MountModel 1-
@@ -134,8 +121,27 @@ s" " $value 10u.ModelAlignmentInfoString
 	10u.SerialNumber 1-
 ;
 
+s" " $value 10u.RAaxisAz  
+s" " $value 10u.RAaxisAlt 
+s" " $value 10u.PolarError
+s" " $value 10u.RAaxisPA  
+s" " $value 10u.OrthoError
+s" " $value 10u.TurnAzLeft
+s" " $value 10u.TurnAltDown
+s" " $value 10u.NumOfTerms
+s" " $value 10u.RMSerror  
+
 : mount_alignment ( --)
-    10u.ModelAlignmentInfo $-> 10u.ModelAlignmentInfoString
+    10u.ModelAlignmentInfo
+              ',' csplit $-> 10u.RAaxisAz
+    1 /string ',' csplit $-> 10u.RAaxisAlt  
+    1 /string ',' csplit $-> 10u.PolarError 
+    1 /string ',' csplit $-> 10u.RAaxisPA   
+    1 /string ',' csplit $-> 10u.OrthoError 
+    1 /string ',' csplit $-> 10u.TurnAzLeft 
+    1 /string ',' csplit $-> 10u.TurnAltDown
+    1 /string ',' csplit $-> 10u.NumOfTerms 
+    1 /string 1- 0 max   $-> 10u.RMSerror       
 ;
 
 \ convenience functions
