@@ -46,7 +46,7 @@ need astrocalc
    -1 SWAP ENDCASE	
 ;
 
-: wait-mount ( -- flag)
+: wait-mount ( -- )
 \ synchronous hold until the mount stops slewing
 	begin
 		mount_busy
@@ -188,7 +188,7 @@ s" " $value 10u.RMSerror
 \ slew the mount to a horizon coordinate, then continue tracking
 	->mount_horizon ( RA DEC --)
 	10u.UnPark
-	10u.SlewToEquatorialTarget ( caddr u)
+	10u.SlewToHorizonTarget ( caddr u)
 	over c@ '0' <> IF 2 - swap 1+ swap .>E abort THEN
 	2drop 
 	cr begin
@@ -198,6 +198,7 @@ s" " $value 10u.RMSerror
 	    s" Alt " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Az " $+> 10u.str1 <.RA> $+> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 
         10u.str1 .>	
 	0= until
+	10u.StartTracking
 ;
 
 : need-flip? ( -- flag)
@@ -273,4 +274,3 @@ s" " $value 10u.RMSerror
     s" RMS Error    " $-> 10u.str1 10u.RMSerror      $+> 10u.str1 10u.str1 .> cr 
 ;     
     
-
