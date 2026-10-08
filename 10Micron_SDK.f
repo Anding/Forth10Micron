@@ -24,13 +24,13 @@ s" " $value 10u.str1
 	?dup 0= if 
 		-> 10Micron.socket
 	else
-		s" 10Micron connection failed with WinSock error number " $-> 10u.str1 (.) $+> 10u.str1 10u.str1 .>E abort
+		s" 10Micron connection failed with WinSock error number " $-> 10u.str1 (.) $+> 10u.str1 10u.str1 .E> abort
 	then
 ;
 
 : 10u.checksocket ( --)
 \ check for an uninitialized socket
-	10Micron.socket 0 = if CR s" Uninitialized TCP/IP socket to the mount" .>E abort
+	10Micron.socket 0 = if s" Uninitialized TCP/IP socket to the mount" .E> abort
 	then
 ;
 
@@ -60,7 +60,7 @@ s" " $value 10u.str1
 			drop ." Failed to poll the socket " CR
 		else
 			0= if
-				\ s" 0 bytes available at the socket" .>D
+				\ s" 0 bytes available at the socket" .D>
 			else
 				10Micron.buffer 256 10Micron.socket readsock 			( tries len 0 | tries error SOCKET_ERROR)
 				SOCKET_ERROR = if							( tries ior)
@@ -73,6 +73,6 @@ s" " $value 10u.str1
 	repeat
 	drop 10Micron.buffer R>						  ( caddr bytes)
 	dup if 
-		10Micron.verbose if 2dup .>D then ( caddr u)
+		10Micron.verbose if 2dup .D> then ( caddr u)
 	then
 ;

@@ -15,9 +15,8 @@ need astrocalc
 
 : add-mount ( --)
 \ Attach to the mount without changing tracking or modelling policy.
-	flushkeys
 	10u.connect
-	cr mount_name $-> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 10u.str1 .> cr
+	mount_name $-> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 10u.str1 .>
 ;
 
 : configure-mount ( --)
@@ -156,10 +155,11 @@ s" " $value 10u.RMSerror
 
 : check-mount ( --)
 \ report the current mount to the user
-	CR 
-	." Mount Name = " mount_name type
-	." ; Status = " mount_status type
-	." ; Pier side = " mount_pierside type
+	s" Mount" panel{
+	s" Name" mount_name .field
+	s" Status" mount_status .field
+	s" Pier side" mount_pierside .field
+	}panel
 ;
 
 \ user lexicon
@@ -181,15 +181,17 @@ s" " $value 10u.RMSerror
     ->mount_equatorial ( RA DEC --)
 	10u.UnPark
 	10u.SlewToEquatorialTarget ( caddr u)
-	over c@ '0' <> IF 2 - swap 1+ swap .>E abort THEN
+	over c@ '0' <> IF 2 - swap 1+ swap .E> abort THEN
 	2drop
 	cr begin
 	    mount_busy       ( flag)
 	    500 ms
 	    mount_equatorial ( flag RA DEC) swap	
 	    s" RA " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Dec " $+> 10u.str1 <.Dec> $+> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 
-        10u.str1 .>	
+        10u.str1 ...>
     0= until
+	-...
+	mount_status .>
 ;
 
 : gotoAltAz ( Alt Az --)
@@ -197,16 +199,18 @@ s" " $value 10u.RMSerror
 	->mount_horizon ( RA DEC --)
 	10u.UnPark
 	10u.SlewToHorizonTarget ( caddr u)
-	over c@ '0' <> IF 2 - swap 1+ swap .>E abort THEN
+	over c@ '0' <> IF 2 - swap 1+ swap .E> abort THEN
 	2drop 
 	cr begin
 	    mount_busy    ( flag)
 	    500 ms
 	    mount_horizon ( flag Alt Az) swap	
 	    s" Alt " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Az " $+> 10u.str1 <.RA> $+> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 
-        10u.str1 .>	
+        10u.str1 ...>
 	0= until
+	-...
 	10u.StartTracking
+	mount_status .>
 ;
 
 : need-flip? ( -- flag)
@@ -219,37 +223,38 @@ s" " $value 10u.RMSerror
 : meridian-flip ( --)
     10u.FlipPierSide ( caddr u)
     drop c@ '0' = if 
-        s" No meridian flip required" .> cr
+        s" No meridian flip required" .>
     else
-        s" Meridian flip in progress..." .> cr
+        s" Meridian flip in progress..." ...>
 	    begin
 	        mount_busy    ( flag)
 	        500 ms
 	    0= until
+	    -...
 	then
-	mount_status .> cr  
+	mount_status .>
 ;
 
 : delete-alignment-model
     10u.DeleteAlignment
-    .>D
+    .D>
 ;
 
 : save-alignment-model ( caddr u --)
     10u.SaveAlignment
-    .>D
+    .D>
 ;
 
 : load-alignment-model ( caddr u --)
     10u.LoadAlignment
-    .>D
+    .D>
 ;
 
 : add-alignment-point ( caddr u --)
     2dup 10u.AddAlignmentPoint
     over c@ 'E' = if 
-        2drop s" Invalid point  " $-> 10u.str1 $+> 10u.str1 10u.str1 .>E
-     else .>D 2drop
+        2drop s" Invalid point  " $-> 10u.str1 $+> 10u.str1 10u.str1 .E>
+     else .D> 2drop
      then
 ;
 
@@ -257,28 +262,29 @@ s" " $value 10u.RMSerror
 \ create a new alignment model
 \ caddr u is a forth file with formatted add-alignment-point commands
     2dup FileExists? 
-    0= if s" No such file" .>E -1 exit then
-    10u.StartNewAlignment .>D
+    0= if s" No such file" .E> -1 exit then
+    10u.StartNewAlignment .D>
     ( addr u ) included
     10u.EndAlignment
-    over c@ 'E' = if 2drop s" Mount failed to compute a model" .>E exit then
-    .>D
+    over c@ 'E' = if 2drop s" Mount failed to compute a model" .E> exit then
+    .D>
     mount_alignment
     s" New alignment model computed" .>
 ;
 
 : .alignment ( --)
-    cr 
-    s" Align stars  " $-> 10u.str1 10u.AlignmentStarCount 1- $+> 10u.str1 10u.str1 .> cr
     mount_alignment
-    s" RA Axis Az   " $-> 10u.str1 10u.RAaxisAz      $+> 10u.str1 10u.str1 .> cr
-    s" RA Axis Alt  " $-> 10u.str1 10u.RAaxisAlt     $+> 10u.str1 10u.str1 .> cr
-    s" Polar Error  " $-> 10u.str1 10u.PolarError    $+> 10u.str1 10u.str1 .> cr
-    s" RA Axis PA   " $-> 10u.str1 10u.RAaxisPA      $+> 10u.str1 10u.str1 .> cr
-    s" Ortho Error  " $-> 10u.str1 10u.OrthoError    $+> 10u.str1 10u.str1 .> cr
-    s" Az go left   " $-> 10u.str1 10u.TurnAzLeft    $+> 10u.str1 10u.str1 .> cr
-    s" Alt go down  " $-> 10u.str1 10u.TurnAltDown   $+> 10u.str1 10u.str1 .> cr
-    s" No. terms    " $-> 10u.str1 10u.NumOfTerms    $+> 10u.str1 10u.str1 .> cr
-    s" RMS Error    " $-> 10u.str1 10u.RMSerror      $+> 10u.str1 10u.str1 .> cr 
+    s" Alignment model" panel{
+    s" Alignment stars" 10u.AlignmentStarCount 1- (.) .field
+    s" RA axis azimuth" 10u.RAaxisAz .field
+    s" RA axis altitude" 10u.RAaxisAlt .field
+    s" Polar error" 10u.PolarError .field
+    s" RA axis PA" 10u.RAaxisPA .field
+    s" Orthogonality error" 10u.OrthoError .field
+    s" Azimuth go left" 10u.TurnAzLeft .field
+    s" Altitude go down" 10u.TurnAltDown .field
+    s" Model terms" 10u.NumOfTerms .field
+    s" RMS error" 10u.RMSerror .field
+    }panel
 ;     
     

@@ -81,8 +81,8 @@
 \ do-or-die error handler	
 	over c@					    \ the first character in the buffer
 	'1' = IF 2drop EXIT THEN    \ '1' is the valid return condition
-	cr s" Mount responds invalid" .>E
-	1- swap 1+ swap cr .>E cr
+	s" Mount responds invalid" .E>
+	1- swap 1+ swap .E>
 	abort 
 ;
 
