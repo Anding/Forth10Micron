@@ -14,13 +14,18 @@ need astrocalc
 ;
 
 : add-mount ( --)
+\ Attach to the mount without changing tracking or modelling policy.
 	flushkeys
 	10u.connect
+	cr mount_name $-> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 10u.str1 .> cr
+;
+
+: configure-mount ( --)
+\ Apply the normal imaging policy explicitly after attachment and inspection.
 	10u.HighPrecisionOn
 	10u.DualAxisTrackingOn 2drop
 	10u.WeatherUpdatesOn 2drop
 	10u.TrackSiderealRate
-	cr mount_name $-> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 10u.str1 .> cr
 ;
 
 : remove-mount ( --)
@@ -151,10 +156,10 @@ s" " $value 10u.RMSerror
 
 : check-mount ( --)
 \ report the current mount to the user
-\ WheelID Name SerialNo Slots
 	CR 
 	." Mount Name = " mount_name type
 	." ; Status = " mount_status type
+	." ; Pier side = " mount_pierside type
 ;
 
 \ user lexicon
