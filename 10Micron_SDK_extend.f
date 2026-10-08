@@ -1,3 +1,6 @@
+\ Defining words for the 10Micron text protocol. Static command strings live
+\ in the dictionary; data commands compose into the one synchronous I/O buffer.
+
 : MAKE-COMMAND
 \ defining word for a 10Micron command
 \ s" raw-command-string" MAKE-COMMAND <name>
