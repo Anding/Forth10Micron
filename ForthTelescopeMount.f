@@ -62,17 +62,23 @@ need astrocalc
 	repeat
 ;
 
+: mount_utcDate ( -- YYMMDD)
+\ Return the mount UTC calendar date in AstroCalc finite-fraction format.
+	10u.utcdatetime >number~~~
+	2000 + -rot swap ~
+;
+
 : mount_equatorial ( -- RA_J2000 DEC_J2000)
 \ return the mount RA and DEC in single integer finite fraction format
 	10u.MountRA >number~
 	10u.MountDEC >number~
-	10u.utcdatetime >number~~~  ( dd mm yy) 2000 + ( yyyy mm dd) -rot swap ( dd mm yyyy) ~ ( RA_JNOW Dec_JNOW YYMMDD)
+	mount_utcDate
 	J2000
 ;
 
 : ->mount_equatorial ( RA_J2000 DEC_J2000 --)
 \ set the mount target RA DEC are provided in single integer finite fraction format
-    10u.utcdatetime >number~~~  ( yy mm dd) 2000 + ( yyyy mm dd) -rot swap ( dd mm yyyy) ~ ( RA_J2000 Dec_J2000 YYMMDD)
+    mount_utcDate
     JNOW ( RA_JNOW Dec_JNOW)
 	~DEC$ 10u.SetTargetDec 10u.?abort
 	~RA$ 10u.SetTargetRA 10u.?abort
@@ -101,6 +107,12 @@ need astrocalc
 : mount_siderealTime ( -- T)
 \ return the local sidereal time in finite fraction format
 	10u.SiderealTime >number~
+;
+
+: mount_horizon-for { RA_J2000 DEC_J2000 | lat long elevation -- ALT AZ }
+\ Convert one J2000 coordinate for the mount's current date, time, and site.
+	mount_location to elevation to long to lat
+	RA_J2000 DEC_J2000 mount_utcDate mount_siderealTime lat J2000toHZ
 ;
 
 : mount_hourAngle ( -- HA)
@@ -254,8 +266,10 @@ s" " $value 10u.RMSerror
     2dup 10u.AddAlignmentPoint
     over c@ 'E' = if 
         2drop s" Invalid point  " $-> 10u.str1 $+> 10u.str1 10u.str1 .E>
-     else .D> 2drop
-     then
+       -1 throw
+    else
+       .D> 2drop
+    then
 ;
 
 : new-alignment-model ( caddr u --)
