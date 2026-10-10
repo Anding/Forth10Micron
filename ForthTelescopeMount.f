@@ -275,7 +275,7 @@ s" " $value 10u.RMSerror
 : .alignment ( --)
     mount_alignment
     s" Alignment model" panel{
-    s" Alignment stars" 10u.AlignmentStarCount 1- (.) .field
+    s" Alignment stars" 10u.AlignmentStarCount 1- .field
     s" RA axis azimuth" 10u.RAaxisAz .field
     s" RA axis altitude" 10u.RAaxisAlt .field
     s" Polar error" 10u.PolarError .field
