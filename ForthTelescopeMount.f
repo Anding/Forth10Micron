@@ -295,7 +295,7 @@ s" " $value 10u.RMSerror
     s" Polar error" 10u.PolarError .field
     s" RA axis PA" 10u.RAaxisPA .field
     s" Orthogonality error" 10u.OrthoError .field
-    s" Azimuth go left" 10u.TurnAzLeft .field
+    s" Az RHS turn clockw." 10u.TurnAzLeft .field
     s" Altitude go down" 10u.TurnAltDown .field
     s" Model terms" 10u.NumOfTerms .field
     s" RMS error" 10u.RMSerror .field
