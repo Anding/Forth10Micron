@@ -6,4 +6,8 @@ The mount is responsible for pointing the telescope and then tracking the target
 Https://www.10micron.com/en/product/gm2000-hps-ii-combi-en/
 
 The mount is connected by a fixed IP, wired Ethernet connection.  The 10Micron use a simple text-based command protocol over TCP/IP.  The command protocol is documented in a PDF file which may be downloaded from the mount itself over the web interface.
+
+An empty alignment-count reply records an empty `ALGNSTRS` value rather than
+passing a negative string length to the metadata map.
+`ForthTelescopeMountMaps_test1.f` checks this without hardware.
  

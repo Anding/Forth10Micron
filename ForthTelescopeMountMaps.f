@@ -40,7 +40,7 @@ NEED forth-map
 	10u.>num (.)                    map =>" TRKLIMIT"
 	10u.MeridianSlewLimit
 	10u.>num (.)                    map =>" SLWLIMIT"
-	10u.AlignmentStarCount 1-       map =>" ALGNSTRS"
+	10u.AlignmentStarCount 1- 0 max map =>" ALGNSTRS"
 	mount_alignment	
 	10u.PolarError                  map =>" POLARERR"
 	10u.OrthoError                  map =>" ORTHOERR"
