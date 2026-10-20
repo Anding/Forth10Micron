@@ -2,7 +2,7 @@
 
 include %idir%\..\..\ForthBase\libraries\libraries.f
 NEED Forth10Micron
-NEED forth-map
+NEED ordered-maps
 
 	192 168 1 107 toIPv4 -> 10Micron.IP		\ DSC
 \ 	192 168 0 15 toIPv4 -> 10Micron.IP		\ DB
@@ -49,5 +49,4 @@ CR ." Set high precision mode"
 .( 10u.UnattendedFlipSetting ) 10u.UnattendedFlipSetting
 .( 10u.MeridianTrackingLimit) 10u.MeridianTrackingLimit
 .( 10u.MeridianSlewLimit) 10u.MeridianSlewLimit
-
 

@@ -1,5 +1,5 @@
 \ write the mount properties to the FITS map
-NEED forth-map
+NEED ordered-maps
 
 : add-mount-positionFITS { RA Dec map -- }
 \ Write one captured J2000 coordinate pair together with the remaining live

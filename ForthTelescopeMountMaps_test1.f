@@ -1,6 +1,6 @@
 \ Hardware-free checks of the actual mount metadata writer.
 NEED ForthBase
-NEED forth-map
+NEED ordered-maps
 NEED simple-tester
 
 : ~FITS$ ( n -- caddr u ) (.) ;
@@ -34,14 +34,20 @@ NEED simple-tester
 ;
 
 include "%idir%\ForthTelescopeMountMaps.f"
-ordered-map constant test.mount-map
+allocate-map constant test.mount-map
 
 Tstart
 T{ 1234 test.mount-map add-mountFITS }T 1234 ==
-T{ s" ALGNSTRS" test.mount-map >string nip }T 0 ==
+T{ s" ALGNSTRS" test.mount-map map@ }T 0 0 ==
 2 -> test.reply-length
 T{ 1234 test.mount-map add-mountFITS }T 1234 ==
-T{ s" ALGNSTRS" test.mount-map >string hashS }T s" 9" hashS ==
-T{ test.mount-map ordered-map-valid? }T -1 ==
-Tend
+T{ s" ALGNSTRS" test.mount-map map@ hashS }T s" 9" hashS ==
+T{ test.mount-map map-count }T 29 ==
+T{ test.mount-map reset-map }T ==
+T{ test.mount-map map-count }T 29 ==
+T{ s" ALGNSTRS" test.mount-map map@ }T 0 0 ==
+T{ test.mount-map add-mountFITS }T ==
+T{ s" ALGNSTRS" test.mount-map map@ hashS }T s" 9" hashS ==
+T{ test.mount-map erase-map test.mount-map map-count }T 0 ==
 test.mount-map free-map
+Tend
