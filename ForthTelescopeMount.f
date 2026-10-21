@@ -272,20 +272,6 @@ s" " $value 10u.RMSerror
     then
 ;
 
-: new-alignment-model ( caddr u --)
-\ create a new alignment model
-\ caddr u is a forth file with formatted add-alignment-point commands
-    2dup FileExists? 
-    0= if s" No such file" .E> -1 exit then
-    10u.StartNewAlignment .D>
-    ( addr u ) included
-    10u.EndAlignment
-    over c@ 'E' = if 2drop s" Mount failed to compute a model" .E> exit then
-    .D>
-    mount_alignment
-    s" New alignment model computed" .>
-;
-
 : .alignment ( --)
     mount_alignment
     s" Alignment model" panel{
