@@ -14,14 +14,14 @@ need astrocalc
 ;
 
 : add-mount ( --)
-\ Attach to the mount without changing tracking or modelling policy.
+\ Attach and select full-second replies without changing tracking or modelling policy.
 	10u.connect
+	10u.HighPrecisionOn
 	mount_name $-> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 10u.str1 .>
 ;
 
 : configure-mount ( --)
 \ Apply the normal imaging policy explicitly after attachment and inspection.
-	10u.HighPrecisionOn
 	10u.DualAxisTrackingOn 2drop
 	10u.WeatherUpdatesOn 2drop
 	10u.TrackSiderealRate
@@ -63,9 +63,9 @@ need astrocalc
 ;
 
 : mount_utcDate ( -- YYMMDD)
-\ Return the mount UTC calendar date in AstroCalc finite-fraction format.
+\ Convert the mount's MM/DD/YY UTC date to AstroCalc finite-fraction format.
 	10u.utcdatetime >number~~~
-	2000 + -rot swap ~
+	2000 + -rot ~
 ;
 
 : mount_equatorial ( -- RA_J2000 DEC_J2000)
