@@ -6,11 +6,12 @@ NEED simple-tester
 
 : 10u.connect ( -- )
 \ Replace the transport connection; no equipment is contacted.
+    1 -> 10Micron.socket
 ;
 
-: 10u.HighPrecisionOn ( -- )
+: (10u.tell) ( caddr u -- sent? )
 \ Record selection of the reply format during attachment.
-    -1 -> test.high-precision
+    2drop -1 -> test.high-precision -1
 ;
 
 : 10u.MountModel ( -- caddr u )
@@ -28,9 +29,14 @@ NEED simple-tester
     s" 10/24/26,12:27:23#"
 ;
 
+: 10u.SetTargetAz ( caddr u -- caddr u ) 2drop s" E#" ;
+: 10u.SetTargetAlt ( caddr u -- caddr u ) 2drop s" 1" ;
+: 10u.SlewToHorizonTarget ( -- caddr u ) s" E#" ;
+
 include "%idir%\ForthTelescopeMount.f"
 
 Tstart
 T{ add-mount test.high-precision }T -1 ==
 T{ mount_utcDate }T 2026 10 24 ~ ==
+T{ 123 10 20 gotoAltAz }T 123 ==
 Tend

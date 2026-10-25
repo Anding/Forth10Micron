@@ -20,17 +20,19 @@ s" " $value 10u.str1
 
 : 10u.connect ( -- )
 \ try to connect to the 10 Micron mount
+	0 -> 10Micron.socket
 	10Micron.IP 0 3490 TCPConnect
 	?dup 0= if 
 		-> 10Micron.socket
 	else
-		s" 10Micron connection failed with WinSock error number " $-> 10u.str1 (.) $+> 10u.str1 10u.str1 .E> abort
+		s" 10Micron connection failed with WinSock error number " $-> 10u.str1 (.) $+> 10u.str1 10u.str1 cr type cr
+		drop
 	then
 ;
 
 : 10u.checksocket ( --)
 \ check for an uninitialized socket
-	10Micron.socket 0 = if s" Uninitialized TCP/IP socket to the mount" .E> abort
+	10Micron.socket 0 = if cr ." Uninitialized TCP/IP socket to the mount" cr
 	then
 ;
 
@@ -38,41 +40,37 @@ s" " $value 10u.str1
 \ VFX does not provide a function to close a socket
 ;
 	
-: 10u.tell ( c-addr u --)
+: (10u.tell) ( c-addr u -- sent?)
 \ pass a command string to the mount	
-	10u.checksocket
+	10Micron.socket 0= if 2drop 10u.checksocket 0 exit then
 	dup -rot 						( u c-addr u)
 	10Micron.socket writesock				( u len 0 | u error SOCKET_ERROR)
-	SOCKET_ERROR = if ." Failed to write to the socket with error " . CR exit then
-	<> if ." Failed to write the full string to the socket" CR exit then
+	SOCKET_ERROR = if ." Failed to write to the socket with error " . drop CR 0 exit then
+	<> if ." Failed to write the full string to the socket" CR 0 exit then
+	-1
+;
+
+: 10u.tell ( c-addr u --)
+	(10u.tell) drop
 ;
 
 : 10u.ask ( -- c-addr u)
 \ get a response from the mount
-	10u.checksocket
-	0 >R 100													( tries R:bytes)
-	begin
-		1- dup 0 >=
-	while
+	10Micron.socket 0= if 10u.checksocket 10Micron.buffer 0 exit then
+	100 0 do
 		100 ms
-		10Micron.socket pollsock									( tries len | tries SOCKET_ERROR)
-		dup SOCKET_ERROR = if 
-			drop ." Failed to poll the socket " CR
-		else
-			0= if
-				\ s" 0 bytes available at the socket" .D>
-			else
-				10Micron.buffer 256 10Micron.socket readsock 			( tries len 0 | tries error SOCKET_ERROR)
-				SOCKET_ERROR = if							( tries ior)
-					." Failed to read the socket with error " . CR
-				else											( tries len)
-					R> drop >R drop 0						( 0 R:bytes)
-				then											( tries R:bytes)
-			then
+		10Micron.socket pollsock
+		dup SOCKET_ERROR = if
+			drop ." Failed to poll the socket " cr 10Micron.buffer 0 unloop exit
 		then
-	repeat
-	drop 10Micron.buffer R>						  ( caddr bytes)
-	dup if 
-		10Micron.verbose if 2dup .D> then ( caddr u)
-	then
+		if
+			10Micron.buffer 256 10Micron.socket readsock
+			SOCKET_ERROR = if
+				." Failed to read the socket with error " . cr 0
+			then
+			10Micron.buffer swap
+			10Micron.verbose if 2dup .D> then unloop exit
+		then
+	loop
+	cr ." No response from the mount" cr 10Micron.buffer 0
 ;

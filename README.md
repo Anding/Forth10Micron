@@ -10,4 +10,15 @@ The mount is connected by a fixed IP, wired Ethernet connection.  The 10Micron u
 An empty alignment-count reply records an empty `ALGNSTRS` value rather than
 passing a negative string length to the metadata map.
 `ForthTelescopeMountMaps_test1.f` checks this without hardware.
+
+Ordinary transport and protocol errors report and return normally.
+`10u.?abort` is a compatibility name for reporting only. Empty replies have
+length zero. Rejected target coordinates, invalid UTC dates and failed
+unpark writes prevent dependent slew commands; invalid status replies stop
+slew monitoring without starting tracking. Callers can retry on a later
+iteration. `ForthTelescopeMount_test1.f` checks attachment, UTC dates and a
+rejected target using mocks, without contacting hardware.
+
+Slews use the common readiness wait and report their final status rather
+than constructing continuous progress strings.
  

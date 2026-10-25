@@ -5,7 +5,7 @@ need astrocalc
 
 : mount_name ( -- caddr u)
 \ return the name of the mount
-	10u.MountModel 1-
+	10u.MountModel 1- 0 max
 ;
 
 : mount_status ( -- caddr u)
@@ -16,72 +16,85 @@ need astrocalc
 : add-mount ( --)
 \ Attach and select full-second replies without changing tracking or modelling policy.
 	10u.connect
-	10u.HighPrecisionOn
+	10Micron.socket 0= if exit then
+	s" :U1#" (10u.tell) 0= if exit then
 	mount_name $-> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 10u.str1 .>
 ;
 
 : configure-mount ( --)
 \ Apply the normal imaging policy explicitly after attachment and inspection.
-	10u.DualAxisTrackingOn 2drop
-	10u.WeatherUpdatesOn 2drop
+	10u.DualAxisTrackingOn 10u.accepted? 0= if exit then
+	10u.WeatherUpdatesOn 10u.accepted? 0= if exit then
 	10u.TrackSiderealRate
 ;
 
-: remove-mount ( --)
-	10u.disconnect
-;
+synonym remove-mount 10u.disconnect ( -- )
 
 : mount_pierside ( -- caddr u)
-	10u.MountPierSide 1-
+	10u.MountPierSide 1- 0 max
+;
+
+: mount-busy? ( -- busy? valid?)
+	10u.status 10u.>num? 0= if
+		drop s" Invalid mount status" .E> 0 0 exit
+	then
+	dup 0 12 within 0= if drop s" Invalid mount status" .E> 0 0 exit then
+	dup 2 5 within over 6 = or over 8 = or swap 11 = or -1
 ;
 
 : mount_busy ( -- flag)
-	10u.status 10u.>num
-	CASE
-	 0 OF 0 ENDOF
-	 1 OF 0 ENDOF
-	 2 OF -1 ENDOF
-	 3 OF -1 ENDOF
-	 4 OF -1 ENDOF
-	 5 OF 0 ENDOF
-	 6 OF -1 ENDOF
-	 7 OF 0 ENDOF
-	 8 OF -1 ENDOF
-	 9 OF 0 ENDOF
-   10 OF 0 ENDOF
-   11 OF -1 ENDOF
-   -1 SWAP ENDCASE	
+	mount-busy? drop
 ;
 
-: wait-mount ( -- )
+: (wait-mount) ( -- ready? )
 \ synchronous hold until the mount stops slewing
 	begin
-		mount_busy
+		mount-busy? 0= if drop 0 exit then
 	while
 		250 ms
 	repeat
+	-1
+;
+
+: wait-mount ( -- )
+	(wait-mount) drop
+;
+
+: mount-date? ( -- YYMMDD valid?)
+\ Convert the mount's MM/DD/YY UTC date to AstroCalc finite-fraction format.
+	10u.utcdatetime 8 min '/' >number3~? 0= if
+		drop s" Invalid mount UTC date" .E> 0 0 exit
+	then
+	~~~ 2000 + -rot ~
+	-1
 ;
 
 : mount_utcDate ( -- YYMMDD)
-\ Convert the mount's MM/DD/YY UTC date to AstroCalc finite-fraction format.
-	10u.utcdatetime >number~~~
-	2000 + -rot ~
+	mount-date? drop
 ;
 
 : mount_equatorial ( -- RA_J2000 DEC_J2000)
 \ return the mount RA and DEC in single integer finite fraction format
-	10u.MountRA >number~
-	10u.MountDEC >number~
-	mount_utcDate
+	10u.MountRA >number~~~? 0= if
+		3drop s" Invalid mount RA" .E> 0 0 exit
+	then ~
+	10u.MountDEC >number~~~? 0= if
+		3drop drop s" Invalid mount Dec" .E> 0 0 exit
+	then ~
+	mount-date? 0= if 3drop 0 0 exit then
 	J2000
 ;
 
-: ->mount_equatorial ( RA_J2000 DEC_J2000 --)
+: (mount-equatorial-target) ( RA_J2000 DEC_J2000 -- accepted?)
 \ set the mount target RA DEC are provided in single integer finite fraction format
-    mount_utcDate
+    mount-date? 0= if drop 2drop 0 exit then
     JNOW ( RA_JNOW Dec_JNOW)
-	~DEC$ 10u.SetTargetDec 10u.?abort
-	~RA$ 10u.SetTargetRA 10u.?abort
+	~DEC$ 10u.SetTargetDec 10u.accepted? 0= if drop 0 exit then
+	~RA$ 10u.SetTargetRA 10u.accepted?
+;
+
+: ->mount_equatorial ( RA_J2000 DEC_J2000 --)
+	(mount-equatorial-target) drop
 ;
 	
 : mount_horizon ( -- ALT AZ)
@@ -90,10 +103,14 @@ need astrocalc
 	10u.MountAZ >number~
 ;
 
+: (mount-horizon-target) ( ALT AZ -- accepted?)
+\ Set target Alt/Az; the caller owns slewing and tracking.
+	~AZ$ 10u.SetTargetAz 10u.accepted? 0= if drop 0 exit then
+	~ALT$ 10u.SetTargetAlt 10u.accepted?
+;
+
 : ->mount_horizon ( ALT AZ --)
-\ slew to ALT AZ provied in single integer finite fraction format and start tracking
-	~AZ$ 10u.SetTargetAz 10u.?abort
-	~ALT$ 10u.SetTargetAlt 10u.?abort
+	(mount-horizon-target) drop
 ;
 
 : mount_location ( -- LAT LONG ELEV)
@@ -101,7 +118,7 @@ need astrocalc
 \ return the ELEV as an integer
 	10u.SiteLatitude >number~
 	10u.SiteLongitude >number~ -1 *						\ convert to West is negative
-	10u.SiteElevation 1- >float if fr>s else 0 then
+	10u.SiteElevation 1- 0 max >float if fr>s else 0 then
 ;	
 
 : mount_siderealTime ( -- T)
@@ -131,13 +148,11 @@ need astrocalc
 	10u.TimeToTrackingEnd 10u.>num 60 *
 ;
 
-: stop-mount ( --)
-	10u.Stop
-;
+synonym stop-mount 10u.Stop ( -- )
 
 : mount_SN ( -- caddr u)
 \ return the S/N of the mount as a string
-	10u.SerialNumber 1-
+	10u.SerialNumber 1- 0 max
 ;
 
 s" " $value 10u.RAaxisAz  
@@ -152,6 +167,7 @@ s" " $value 10u.RMSerror
 
 : mount_alignment ( --)
     10u.ModelAlignmentInfo
+    dup 0= if 2drop s" No mount alignment response" .E> exit then
               ',' csplit $-> 10u.RAaxisAz
     1 /string ',' csplit $-> 10u.RAaxisAlt  
     1 /string ',' csplit $-> 10u.PolarError 
@@ -177,7 +193,7 @@ s" " $value 10u.RMSerror
 \ user lexicon
 
 : unpark ( --)
-	10u.unpark
+	s" :PO#" (10u.tell) 0= if exit then
 	10u.StartTracking
 	mount_status .>
 ;
@@ -190,58 +206,44 @@ s" " $value 10u.RMSerror
 
 : goto ( RA Dec --)
 \ slew the mount to an equatorial coordinate
-    ->mount_equatorial ( RA DEC --)
-	10u.UnPark
+    (mount-equatorial-target) 0= if exit then
+	s" :PO#" (10u.tell) 0= if exit then
 	10u.SlewToEquatorialTarget ( caddr u)
-	over c@ '0' <> IF 2 - swap 1+ swap .E> abort THEN
+	dup 0= if 2drop s" No slew response" .E> exit then
+	over c@ '0' <> IF .E> exit THEN
 	2drop
-	cr begin
-	    mount_busy       ( flag)
-	    500 ms
-	    mount_equatorial ( flag RA DEC) swap	
-	    s" RA " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Dec " $+> 10u.str1 <.Dec> $+> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 
-        10u.str1 ...>
-    0= until
-	-...
+	(wait-mount) 0= if exit then
 	mount_status .>
 ;
 
 : gotoAltAz ( Alt Az --)
 \ slew the mount to a horizon coordinate, then continue tracking
-	->mount_horizon ( RA DEC --)
-	10u.UnPark
+	(mount-horizon-target) 0= if exit then
+	s" :PO#" (10u.tell) 0= if exit then
 	10u.SlewToHorizonTarget ( caddr u)
-	over c@ '0' <> IF 2 - swap 1+ swap .E> abort THEN
+	dup 0= if 2drop s" No slew response" .E> exit then
+	over c@ '0' <> IF .E> exit THEN
 	2drop 
-	cr begin
-	    mount_busy    ( flag)
-	    500 ms
-	    mount_horizon ( flag Alt Az) swap	
-	    s" Alt " $-> 10u.str1 <.RA> $+> 10u.str1 s"  Az " $+> 10u.str1 <.RA> $+> 10u.str1 s"  " $+> 10u.str1 mount_status $+> 10u.str1 
-        10u.str1 ...>
-	0= until
-	-...
+	(wait-mount) 0= if exit then
 	10u.StartTracking
 	mount_status .>
 ;
 
 : need-flip? ( -- flag)
 \ return true if the mount should make a meridian flip to continue tracking
-    mount_pierside drop c@ 'W' = 
+    mount_pierside dup 0= if 2drop 0 exit then drop c@ 'W' =
     mount_hourAngle 0 >=
     and if -1 else 0 then
 ;
 
 : meridian-flip ( --)
     10u.FlipPierSide ( caddr u)
+    dup 0= if 2drop s" No meridian flip response" .E> exit then
     drop c@ '0' = if 
         s" No meridian flip required" .>
     else
         s" Meridian flip in progress..." ...>
-	    begin
-	        mount_busy    ( flag)
-	        500 ms
-	    0= until
+	    (wait-mount) 0= if -... exit then
 	    -...
 	then
 	mount_status .>
@@ -263,19 +265,15 @@ s" " $value 10u.RMSerror
 ;
 
 : add-alignment-point ( caddr u --)
-    2dup 10u.AddAlignmentPoint
-    over c@ 'E' = if 
-        2drop s" Invalid point  " $-> 10u.str1 $+> 10u.str1 10u.str1 .E>
-       -1 throw
-    else
-       .D> 2drop
-    then
+    10u.AddAlignmentPoint
+    dup 0= if 2drop s" No alignment point response" .E> exit then
+    over c@ 'E' = if .E> else .D> then
 ;
 
 : .alignment ( --)
     mount_alignment
     s" Alignment model" panel{
-    s" Alignment stars" 10u.AlignmentStarCount 1- .field
+    s" Alignment stars" 10u.AlignmentStarCount 1- 0 max .field
     s" RA axis azimuth" 10u.RAaxisAz .field
     s" RA axis altitude" 10u.RAaxisAlt .field
     s" Polar error" 10u.PolarError .field

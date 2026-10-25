@@ -8,8 +8,7 @@
 		$,					\ compile the caddr u string to the parameter field as a counted string
 	DOES>	( -- caddr u)
 		count				\ copy the counted string at the PFA to the stack in caddr u format
-		10u.tell 
-		10u.ask
+		(10u.tell) if 10u.ask else 10Micron.buffer 0 then
 ;
 
 : compose-command {: caddr1 u1 caddr2 u2 -- MNTBUF u3 :}	\ use VFX locals
@@ -34,8 +33,12 @@
 		$,
 	DOES>	( caddr u -- caddr u)
 		count				\ copy the counted string at the PFA to the stack in caddr u format
-		2swap compose-command 10u.tell 
-		10u.ask
+		2swap
+		dup 0< over 0= or if 2drop 2drop cr ." Empty mount command data" cr 10Micron.buffer 0 exit then
+		2over nip over + 255 > if
+			2drop 2drop cr ." Mount command is too long" cr 10Micron.buffer 0 exit
+		then
+		compose-command (10u.tell) if 10u.ask else 10Micron.buffer 0 then
 ;
 
 : MAKE-QUIET-COMMAND
@@ -55,48 +58,42 @@
 	'*' ':' -1 ~custom$
 ;
 
-: ~RA$ ( hr-min-sec -- caddr u)
-\ obtain a right ascension string in the format HH:MM:SS	from single integer finite fraction format
-   ':' ':' 0 ~custom$
-;
+synonym ~RA$ <.RA> ( hr-min-sec -- caddr u )
 
-: ~ALT$ ( deg-min-sec -- caddr u)
-\ obtain an altitude string in the format sDD*MM:SS from single integer finite fraction format
-   '*' ':' -1 ~custom$
-;
+synonym ~ALT$ ~DEC$ ( deg-min-sec -- caddr u )
 
 : ~AZ$ ( deg-min-sec -- caddr u)
 \ obtain an azimuth string in the format DDD*MM:SS from single integer finite fraction format	
    '*' ':' 0 ~custom$
 ;
 
-\ Prepare string formats for FITS
-
-: ~FITS$ ( x-y-z -- caddr u)
-\ obtain an  string in the format XX YY ZZ from single integer finite fraction format	
-   BL BL 0 ~custom$
- ;
+: 10u.accepted? ( caddr u -- flag)
+\ A missing or rejected target must not be followed by a slew.
+	dup if over c@ '1' = if 2drop -1 exit then then
+	cr ." Mount responds invalid: " type cr 0
+;
 
 : 10u.?abort ( caddr u --)
-\ do-or-die error handler	
-	over c@					    \ the first character in the buffer
-	'1' = IF 2drop EXIT THEN    \ '1' is the valid return condition
-	s" Mount responds invalid" .E>
-	1- swap 1+ swap .E>
-	abort 
+\ Report only; the compatibility name no longer aborts.
+	10u.accepted? drop
 ;
 
 \ Convenience functions
 
-:	10u.>num ( caddr u -- n)
-\ take a 10u return string and convert to an integer or otherwise return 0
+:	10u.>num? ( caddr u -- n valid?)
+\ Take a numeric protocol reply without conflating a missing reply with zero.
+	dup 0= if 2drop 0 0 exit then
 	2dup + 1- c@ '#' = IF 1- THEN		\ # some but not all returns terminate in #
 	isInteger? ( d 2 | n 1 | 0)
 	case
-		0 of 0 endof
-		1 of ( n) endof
-		2 of 2drop 0 endof
+		0 of 0 0 endof
+		1 of -1 endof
+		2 of 2drop 0 0 endof
 	endcase
+;
+
+: 10u.>num ( caddr u -- n)
+	10u.>num? 0= if cr ." Invalid numeric mount response" cr then
 ;
 
 BEGIN-ENUMS 10u.modes
