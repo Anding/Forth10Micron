@@ -1,7 +1,7 @@
 \ Interactive mount vocabulary over the synchronous 10Micron command layer.
 \ The selected mount is session-global and equipment operations block.
 
-need astrocalc
+need ForthAstroCalc
 
 : mount_name ( -- caddr u)
 \ return the name of the mount
