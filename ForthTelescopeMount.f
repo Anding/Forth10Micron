@@ -204,29 +204,48 @@ s" " $value 10u.RMSerror
 	mount_status .>
 ;
 
-: goto ( RA Dec --)
-\ slew the mount to an equatorial coordinate
-    (mount-equatorial-target) 0= if exit then
+: .mount-status ( -- )
+\ Report the final mount state without implying that a failed slew succeeded.
+    s" Mount status: " $-> 10u.str1
+    mount_status $+> 10u.str1
+    10u.str1 .>
+;
+
+: goto { target-ra target-dec -- }
+\ Announce a J2000 equatorial target and show progress until the slew finishes.
+    s" Goto RA " $-> 10u.str1
+    target-ra ~RA$ $+> 10u.str1
+    s"  Dec " $+> 10u.str1
+    target-dec ~DEC$ $+> 10u.str1
+    10u.str1 .>
+    target-ra target-dec (mount-equatorial-target) 0= if exit then
 	s" :PO#" (10u.tell) 0= if exit then
 	10u.SlewToEquatorialTarget ( caddr u)
 	dup 0= if 2drop s" No slew response" .E> exit then
 	over c@ '0' <> IF .E> exit THEN
 	2drop
-	(wait-mount) 0= if exit then
-	mount_status .>
+	s" Mount slewing..." ...>
+	(wait-mount) -... 0= if exit then
+	.mount-status
 ;
 
-: gotoAltAz ( Alt Az --)
-\ slew the mount to a horizon coordinate, then continue tracking
-	(mount-horizon-target) 0= if exit then
+: gotoAltAz { altitude azimuth -- }
+\ Announce an Alt/Az target, show slew progress, then continue tracking.
+	s" Goto Alt " $-> 10u.str1
+	altitude ~ALT$ $+> 10u.str1
+	s"  Az " $+> 10u.str1
+	azimuth ~AZ$ $+> 10u.str1
+	10u.str1 .>
+	altitude azimuth (mount-horizon-target) 0= if exit then
 	s" :PO#" (10u.tell) 0= if exit then
 	10u.SlewToHorizonTarget ( caddr u)
 	dup 0= if 2drop s" No slew response" .E> exit then
 	over c@ '0' <> IF .E> exit THEN
-	2drop 
-	(wait-mount) 0= if exit then
+	2drop
+	s" Mount slewing..." ...>
+	(wait-mount) -... 0= if exit then
 	10u.StartTracking
-	mount_status .>
+	.mount-status
 ;
 
 : need-flip? ( -- flag)
