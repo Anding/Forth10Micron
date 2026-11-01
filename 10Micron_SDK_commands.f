@@ -97,7 +97,7 @@ s" :MA#"  MAKE-COMMAND			10u.SlewToHorizonTarget \ no tracking
 s" :RT0#" MAKE-QUIET-COMMAND 	10u.TrackLunarRate
 s" :RT1#" MAKE-QUIET-COMMAND 	10u.TrackSolarRate
 s" :RT2#" MAKE-QUIET-COMMAND 	10u.TrackSiderealRate
-s" :Slmt#" MAKE-DATA-COMMAND	10u.SetMeridianLimitTracking
+s" :Slmt" MAKE-DATA-COMMAND	10u.SetMeridianLimitTracking
 s" :Slms#" MAKE-DATA-COMMAND	10u.SetMeridianLimitSlews
 s" :FLIP#" MAKE-COMMAND			10u.FlipPierSide
 

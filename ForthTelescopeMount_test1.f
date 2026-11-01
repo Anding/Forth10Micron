@@ -51,6 +51,8 @@ NEED simple-tester
 include "%idir%\ForthTelescopeMount.f"
 
 Tstart
+T{ ' 10u.SetMeridianLimitTracking >body count s" 05" compose-command
+   s" :Slmt05#" compare }T 0 ==
 T{ add-mount test.high-precision }T -1 ==
 T{ mount_utcDate }T 2026 10 24 ~ ==
 T{ 123 10 20 gotoAltAz }T 123 ==
