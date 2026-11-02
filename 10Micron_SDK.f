@@ -3,6 +3,17 @@ NEED forthbase
 NEED network
 NEED finitefractions
 NEED forthVT100
+NEED windows
+
+0 value mount.error.code       \ WinSock ior, or -1 for an already detected local failure.
+0 value mount.error.timestamp  \ UTC Unix epoch seconds.
+
+: 10u.error! ( code -- )
+\ Latch nonzero transport/malformed-response failures; never recover in the driver.
+    ?dup if
+        -> mount.error.code utc-epoch-seconds -> mount.error.timestamp
+    then
+;
 
 s" " $value 10u.str1
 
@@ -25,6 +36,7 @@ s" " $value 10u.str1
 	?dup 0= if 
 		-> 10Micron.socket
 	else
+        dup 10u.error!
 		s" 10Micron connection failed with WinSock error number " $-> 10u.str1 (.) $+> 10u.str1 10u.str1 cr type cr
 		drop
 	then
@@ -33,11 +45,16 @@ s" " $value 10u.str1
 : 10u.checksocket ( --)
 \ check for an uninitialized socket
 	10Micron.socket 0 = if cr ." Uninitialized TCP/IP socket to the mount" cr
+        -1 10u.error!
 	then
 ;
 
 : 10u.disconnect ( --)
-\ VFX does not provide a function to close a socket
+\ Release only the transport; disconnect never changes mount motion.
+    10Micron.socket ?dup if
+        closesocket if WSAGetLastError 10u.error! then
+        0 -> 10Micron.socket
+    then
 ;
 	
 : (10u.tell) ( c-addr u -- sent?)
@@ -45,8 +62,8 @@ s" " $value 10u.str1
 	10Micron.socket 0= if 2drop 10u.checksocket 0 exit then
 	dup -rot 						( u c-addr u)
 	10Micron.socket writesock				( u len 0 | u error SOCKET_ERROR)
-	SOCKET_ERROR = if ." Failed to write to the socket with error " . drop CR 0 exit then
-	<> if ." Failed to write the full string to the socket" CR 0 exit then
+	?dup if dup 10u.error! ." Failed to write to the socket with error " . 2drop CR 0 exit then
+	<> if -1 10u.error! ." Failed to write the full string to the socket" CR 0 exit then
 	-1
 ;
 
@@ -61,16 +78,21 @@ s" " $value 10u.str1
 		100 ms
 		10Micron.socket pollsock
 		dup SOCKET_ERROR = if
+            WSAGetLastError 10u.error!
 			drop ." Failed to poll the socket " cr 10Micron.buffer 0 unloop exit
 		then
 		if
 			10Micron.buffer 256 10Micron.socket readsock
-			SOCKET_ERROR = if
-				." Failed to read the socket with error " . cr 0
+			?dup if
+                dup 10u.error!
+				." Failed to read the socket with error " . cr drop 0
+            else
+                dup 0= if -1 10u.error! then
 			then
 			10Micron.buffer swap
 			10Micron.verbose if 2dup .D> then unloop exit
 		then
 	loop
+    -1 10u.error!
 	cr ." No response from the mount" cr 10Micron.buffer 0
 ;

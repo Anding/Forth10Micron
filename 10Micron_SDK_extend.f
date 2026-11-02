@@ -93,7 +93,7 @@ synonym ~ALT$ ~DEC$ ( deg-min-sec -- caddr u )
 ;
 
 : 10u.>num ( caddr u -- n)
-	10u.>num? 0= if cr ." Invalid numeric mount response" cr then
+	10u.>num? 0= if -1 10u.error! cr ." Invalid numeric mount response" cr then
 ;
 
 BEGIN-ENUMS 10u.modes

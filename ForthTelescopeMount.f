@@ -43,9 +43,9 @@ synonym remove-mount 10u.disconnect ( -- )
 
 : mount-busy? ( -- busy? valid?)
 	10u.status 10u.>num? 0= if
-		drop s" Invalid mount status" .E> 0 0 exit
+		drop -1 10u.error! s" Invalid mount status" .E> 0 0 exit
 	then
-	dup 0 12 within 0= if drop s" Invalid mount status" .E> 0 0 exit then
+	dup 0 12 within 0= if drop -1 10u.error! s" Invalid mount status" .E> 0 0 exit then
 	dup 2 5 within over 6 = or over 8 = or swap 11 = or -1
 ;
 
@@ -70,7 +70,7 @@ synonym remove-mount 10u.disconnect ( -- )
 : mount-date? ( -- YYMMDD valid?)
 \ Convert the mount's MM/DD/YY UTC date to AstroCalc finite-fraction format.
 	10u.utcdatetime 8 min '/' >number3~? 0= if
-		drop s" Invalid mount UTC date" .E> 0 0 exit
+		drop -1 10u.error! s" Invalid mount UTC date" .E> 0 0 exit
 	then
 	~~~ 2000 + -rot ~
 	-1
@@ -83,10 +83,10 @@ synonym remove-mount 10u.disconnect ( -- )
 : mount_equatorial ( -- RA_J2000 DEC_J2000)
 \ return the mount RA and DEC in single integer finite fraction format
 	10u.MountRA >number~~~? 0= if
-		3drop s" Invalid mount RA" .E> 0 0 exit
+		3drop -1 10u.error! s" Invalid mount RA" .E> 0 0 exit
 	then ~
 	10u.MountDEC >number~~~? 0= if
-		3drop drop s" Invalid mount Dec" .E> 0 0 exit
+		3drop drop -1 10u.error! s" Invalid mount Dec" .E> 0 0 exit
 	then ~
 	mount-date? 0= if 3drop 0 0 exit then
 	J2000
