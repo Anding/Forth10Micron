@@ -3,6 +3,9 @@
 
 need ForthAstroCalc
 
+0 value mount.default.slew-limit      \ Degrees beyond the meridian.
+5 value mount.default.tracking-limit  \ Degrees beyond the meridian.
+
 : mount_name ( -- caddr u)
 \ return the name of the mount
 	10u.MountModel 1- 0 max
@@ -26,6 +29,10 @@ need ForthAstroCalc
 	10u.DualAxisTrackingOn 10u.accepted? 0= if exit then
 	10u.WeatherUpdatesOn 10u.accepted? 0= if exit then
 	10u.TrackSiderealRate
+    mount.default.slew-limit 0 <# # # #> 10u.SetMeridianLimitSlews
+    10u.accepted? 0= if exit then
+    mount.default.tracking-limit 0 <# # # #> 10u.SetMeridianLimitTracking
+    10u.accepted? drop
 ;
 
 synonym remove-mount 10u.disconnect ( -- )

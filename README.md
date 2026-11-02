@@ -7,6 +7,12 @@ Https://www.10micron.com/en/product/gm2000-hps-ii-combi-en/
 
 The mount is connected by a fixed IP, wired Ethernet connection.  The 10Micron use a simple text-based command protocol over TCP/IP.  The command protocol is documented in a PDF file which may be downloaded from the mount itself over the web interface.
 
+`add-mount` attaches only. `configure-mount` selects dual-axis tracking,
+weather updates and sidereal rate, then desired meridian limits (slews 0,
+tracking 5 degrees). It never unparks, slews or starts stopped tracking.
+Accepted explicit `goto`/`gotoAltAz` requests unpark immediately before slewing.
+`mount.default.*` values are desired policy, not cached settings.
+
 An empty alignment-count reply records an empty `ALGNSTRS` value rather than
 passing a negative string length to the metadata map.
 `ForthTelescopeMountMaps_test1.f` checks this without hardware.
